@@ -1,0 +1,137 @@
+@import url("./colors.css");
+
+:root {
+  /* ----- COLORS ----- */
+  --clr-white: #ffffff;
+  --clr-black: #000000;
+  --clr-accent: var(--clr-blue-800);
+
+  /* More colors in colors.css */
+
+  /* ----- FONTS ----- */
+  --ff-sans: system-ui, sans-serif;
+  --ff-serif: "Times New Roman", Times, Georgia, serif;
+
+  --fs-100: 0.875rem; /* 14px */
+  --fs-400: 1rem; /* 16px */
+  --fs-450: 1.125rem; /* 18px */
+  --fs-500: 1.25rem; /* 20px */
+  --fs-600: 1.5rem; /* 24px */
+  --fs-700: 1.75rem; /* 28px */
+  --fs-800: 2rem; /* 32px */
+  --fs-900: 3rem; /* 48px */
+
+  /* ----- SPACING ----- */
+  --space-050: 0.125rem; /* 2px */
+  --space-100: 0.25rem; /* 4px */
+  --space-200: 0.5rem; /* 8px */
+  --space-300: 0.75rem; /* 12px */
+  --space-400: 1rem; /* 16px */
+  --space-500: 1.5rem; /* 24px */
+  --space-600: 2rem; /* 32px */
+  --space-700: 2.5rem; /* 40px */
+  --space-800: 3rem; /* 48px */
+  --space-900: 3.5rem; /* 56px */
+  --space-950: 5rem; /* 80px */
+
+  --letter-space-100: 0.5px;
+  --letter-space-400: 1px;
+  --letter-space-900: 2px;
+}
+
+body {
+  min-height: 100svh;
+  font-family: var(--ff-sans);
+  font-size: var(--fs-400);
+  margin: 0;
+}
+
+.wrapper > * {
+  grid-area: content;
+}
+
+.wrapper,
+.wrapper--small {
+  --_wrapper-padding: 5%;
+  --breakout-padding: 3rem;
+  max-width: 93rem;
+  display: grid;
+  grid-template-columns:
+    [full-width-start] var(--_wrapper-padding) [breakout-start] var(--breakout-padding) [content-start] 1fr [content-end] var(--breakout-padding) [breakout-end] var(--_wrapper-padding) [full-width-end];
+  margin-inline: auto;
+}
+
+.wrapper--small {
+  --_wrapper-padding: 15%;
+  max-width: 75rem;
+}
+.wrapper--full-width > * {
+  grid-area: full-width;
+}
+.wrapper--breakout > * {
+  grid-area: breakout;
+}
+
+.text-black {
+  color: var(--clr-black);
+}
+.text-white {
+  color: var(--clr-white);
+}
+.italic {
+  font-style: italic;
+}
+
+.ff-sans {
+  font-family: var(--ff-sans);
+}
+.ff-serif {
+  font-family: var(--ff-serif);
+}
+
+.fs-100 {
+  font-size: var(--fs-100);
+}
+.fs-200 {
+  font-size: var(--fs-200);
+}
+.fs-300 {
+  font-size: var(--fs-300);
+}
+.fs-400 {
+  font-size: var(--fs-400);
+}
+.fs-500 {
+  font-size: var(--fs-500);
+}
+.fs-600 {
+  font-size: var(--fs-600);
+}
+.fs-700 {
+  font-size: var(--fs-700);
+}
+.fs-800 {
+  font-size: var(--fs-800);
+}
+.fs-900 {
+  font-size: var(--fs-900);
+}
+
+.flex {
+  display: flex;
+  gap: var(--space-200);
+}
+
+.space-between {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.grid {
+  display: grid;
+  gap: var(--space-200);
+}
+
+a {
+  color: var(--clr-accent);
+}
