@@ -59,12 +59,12 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(png|jpg|gif|svg|avif)$/i,
+        test: /\.(png|jpg|gif|svg|avif|jpeg)$/i,
         use: ['file-loader'],
       },
       {
         test: /\.css$/i,
-        use: ['style-loader', 'css-loader']
+        use: ['style-loader', 'css-loader', 'postcss-loader']
       },
       {
         test: /\.(?:js|mjs|cjs)$/,

@@ -40,4 +40,4 @@ class GameBoard {
 const game = new GameBoard([new Ship(2, 3, 5, true), new Ship(3, 3, 3, true)])
 game.isAllSunk()
 // export default GameBoard
-// module.exports = GameBoard;
+module.exports = GameBoard;
