@@ -1,4 +1,6 @@
-@import url("./colors.css");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   /* ----- COLORS ----- */
@@ -44,6 +46,8 @@ body {
   font-family: var(--ff-sans);
   font-size: var(--fs-400);
   margin: 0;
+  display: grid;
+  place-content: center;
 }
 
 .wrapper > * {
@@ -135,3 +139,23 @@ body {
 a {
   color: var(--clr-accent);
 }
+
+.game-board {
+  width: 550px;
+  height: 550px;
+  display: grid;
+  grid-template-columns: repeat(11, 50px);
+  grid-template-rows: repeat(11, 50px);
+  outline: 1px solid black;
+}
+
+.square {
+  outline: 1px solid black;
+  cursor: pointer;
+}
+
+.square-mark {
+  display: grid;
+  place-content: center;
+}
+
