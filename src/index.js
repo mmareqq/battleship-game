@@ -28,4 +28,5 @@ async function startGame() {
    boardEl.innerHTML = board;
 }
 
+
 init();

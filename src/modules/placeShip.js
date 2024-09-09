@@ -1,3 +1,6 @@
+import Ship from './ship'
+
+
 function checkPlaceForShip(x, y, length, isVertical) {
    if(isVertical) {
       if(x + length > 9) return false
@@ -6,6 +9,16 @@ function checkPlaceForShip(x, y, length, isVertical) {
    }
    return true
 }
+
+const btns = document.querySelectorAll('.ship-btn')
+let activeBtn = document.querySelector('')
+let ship = new Ship()
+
+
+function drawShipOnGrid(ship) {
+
+}
+
 
 // export default checkPlaceForShip
 module.exports = checkPlaceForShip
