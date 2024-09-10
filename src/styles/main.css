@@ -195,6 +195,8 @@ a {
 }
 
 .switch-dir-btn {
+  display: block;
+  cursor: pointer;
   width: 2.5rem;
   height: 1rem;
   background-color: rgb(151, 151, 151);
@@ -202,20 +204,54 @@ a {
   position: relative;
 }
 
-.switch-dir-btn::before {
-  content: '';
-  position: absolute;
-  width: 1.2rem;
-  height: 1.2rem;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  top: -.1rem;
-  left: 0;
-  background-color: rgb(24, 79, 138);
-  transition: all --transition-normal;
+.switch-btn-con {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+input[name="direction"] {
+  display: none;
+}
+
+label {
+  cursor: pointer;
+}
+
+input[name="direction"] + label {
+  transition: all var(--transition-normal);
+  font-weight: bold;
+  position: relative;
+  &::before {
+    content: '';
+    position: absolute;
+    height: 2px;
+    inset-inline: 0;
+    bottom: 0;
+    scale: 0 1;
+    background-color: rgb(24, 79, 138);
+    transition: scale var(--transition-fast);
+    transform-origin: center;
+  }
+}
+
+input[name="direction"]:checked + label {
+  color: rgb(24, 79, 138);
+
+  &::before {
+    scale: 1 1;  
+  }
 }
 
 .switch-dir-btn[data-state="ver"]::before {
   right: 0;
   left: unset;
+}
+
+.square--hover {
+  background-color: rgb(24, 79, 138);
+}
+
+.square--occupied {
+  background-color: blue;
 }

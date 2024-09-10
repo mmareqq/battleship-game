@@ -1,4 +1,5 @@
 import getTemplate from './modules/getTemplate';
+import { initalizeHoverEffect } from './modules/placeShip';
 import './styles/input.css';
 
 const board = await getTemplate('./templates/board.html');
@@ -26,6 +27,7 @@ async function startGame() {
    document.body.innerHTML = template;
    const boardEl = document.querySelector('.board');
    boardEl.innerHTML = board;
+   initalizeHoverEffect()
 }
 
 
