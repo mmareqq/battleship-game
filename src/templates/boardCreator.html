@@ -1,17 +1,19 @@
 <main class="main board-creator">
    <h1 class="text-4xl text-center mb-11">Place your ships:</h1>
    <p class="text-xl mb-4">Place ship:</p>
-         <ul class="ship-btn-container mb-5 grid">
-            <li class="flex justify-between place-items-center gap-8"><button data-ship="5" class="ship-btn active rounded-none"><img class="ship-img w-48" src="../assets/ship-5.svg"></img></button> <span data-ship="5" class="ship-count">x1</span></li>
-            <li class="flex justify-between place-items-center gap-8"><button data-ship="4" class="ship-btn rounded-none"><img class="ship-img w-36" src="../assets/ship-4.svg"></img></button><span data-ship="4" class="ship-count">x1</span></li>
-            <li class="flex justify-between place-items-center gap-8"><button data-ship="3" class="ship-btn rounded-none"><img class="ship-img w-24" src="../assets/ship-3.svg"></img></button><span data-ship="3" class="ship-count">x2</span></li>
-            <li class="flex justify-between place-items-center gap-8"><button data-ship="2" class="ship-btn rounded-none"><img class="ship-img w-14" src="../assets/ship-2.svg"></img></button><span data-ship="2" class="ship-count">x3</span></li>
+         <ul class="select-none ship-btn-container mb-5 grid">
+            <li class="flex justify-between place-items-center gap-8"><button data-ship="5" class="ship-btn active"><img class="ship-img w-48" src="../assets/ship-5.svg"></img></button> <span data-ship="5" class="ship-count">x1</span></li>
+            <li class="flex justify-between place-items-center gap-8"><button data-ship="4" class="ship-btn"><img class="ship-img w-36" src="../assets/ship-4.svg"></img></button><span data-ship="4" class="ship-count">x1</span></li>
+            <li class="flex justify-between place-items-center gap-8"><button data-ship="3" class="ship-btn"><img class="ship-img w-24" src="../assets/ship-3.svg"></img></button><span data-ship="3" class="ship-count">x2</span></li>
+            <li class="flex justify-between place-items-center gap-8"><button data-ship="2" class="ship-btn"><img class="ship-img w-14" src="../assets/ship-2.svg"></img></button><span data-ship="2" class="ship-count">x3</span></li>
          </ul>
-         <div class="switch-btn-con mb-5">
-            <input type="radio" name="direction" id="vertical" checked>
-            <label for="vertical">Vertical</label>
-            <input type="radio" name="direction" id="horizontal">
-            <label for="horizontal">Horizontal</label>
+         <div class="select-none switch-btn-con mb-5">
+            <button class="ship-direction" data-dir="ver" data-selected="true">Vertical</button>
+            <button class="ship-direction" data-dir="hor" data-selected="false">Horizontal</button>
          </div>
-      <div class="board"></div>
+      <div class="board select-none"></div>
+      <menu class="menu flex mt-4">
+         <button class="reset-btn bg-slate-300 px-4 py-2 rounded-s ml-auto">Reset Board</button>
+         <button class="continue-btn btn--inactive bg-green-500 px-4 py-2 rounded-s">Continue</button>
+      </menu>
 </main>

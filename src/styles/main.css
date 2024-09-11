@@ -182,6 +182,7 @@ a {
 
 .ship-btn {
   width: 100%;
+  border-radius: 0;
   display: block;
   min-height: 2.75rem;
 }
@@ -210,32 +211,25 @@ a {
   gap: 1rem;
 }
 
-input[name="direction"] {
-  display: none;
-}
-
-label {
-  cursor: pointer;
-}
-
-input[name="direction"] + label {
+.ship-direction {
   transition: all var(--transition-normal);
-  font-weight: bold;
+  font-weight: 700;
   position: relative;
-  &::before {
-    content: '';
-    position: absolute;
-    height: 2px;
-    inset-inline: 0;
-    bottom: 0;
-    scale: 0 1;
-    background-color: rgb(24, 79, 138);
-    transition: scale var(--transition-fast);
-    transform-origin: center;
-  }
 }
 
-input[name="direction"]:checked + label {
+.ship-direction::before {
+  content: '';
+  position: absolute;
+  height: 2px;
+  inset-inline: 0;
+  bottom: 0;
+  scale: 0 1;
+  background-color: rgb(24, 79, 138);
+  transition: scale var(--transition-fast);
+  transform-origin: center;
+}
+
+.ship-direction[data-selected="true"] {
   color: rgb(24, 79, 138);
 
   &::before {
@@ -254,4 +248,9 @@ input[name="direction"]:checked + label {
 
 .square--occupied {
   background-color: blue;
+}
+
+.btn--inactive {
+  pointer-events: none;
+  opacity: .75;
 }

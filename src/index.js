@@ -1,5 +1,6 @@
 import getTemplate from './modules/getTemplate';
-import { initalizeHoverEffect } from './modules/placeShip';
+import BoardManager from './modules/placeShip';
+import BoardCreator from './modules/placeShip';
 import './styles/input.css';
 
 const board = await getTemplate('./templates/board.html');
@@ -17,7 +18,7 @@ async function fetchStartingPage() {
 async function init() {
    await fetchStartingPage();
    const btn = document.querySelector('.play-button');
-   startGame()
+   startGame();
    btn.addEventListener('click', startGame);
 }
 
@@ -27,8 +28,13 @@ async function startGame() {
    document.body.innerHTML = template;
    const boardEl = document.querySelector('.board');
    boardEl.innerHTML = board;
-   initalizeHoverEffect()
-}
+   let boardManager = new BoardManager()
 
+   const resetBtn = document.querySelector('.reset-btn')
+   resetBtn.addEventListener('click', () => {
+      startGame()
+   })
+   
+}
 
 init();
