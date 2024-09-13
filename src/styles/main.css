@@ -36,6 +36,7 @@
   --letter-space-400: 1px;
   --letter-space-900: 2px;
 
+  --transition-very-fast: .1s linear;
   --transition-fast: .15s ease-out;
   --transition-normal: .3s ease-out;
   --transition-slow: .5s ease-out; 
@@ -149,6 +150,7 @@ a {
 .square {
   outline: 1px solid black;
   cursor: pointer;
+  transition: background-color var(--transition-very-fast);
 }
 
 .square-mark {
@@ -246,11 +248,16 @@ a {
   background-color: rgb(24, 79, 138);
 }
 
-.square--occupied {
-  background-color: blue;
-}
 
 .btn--inactive {
   pointer-events: none;
   opacity: .75;
+}
+
+.square--blocked {
+  background-color: rgba(255, 55, 55, 0.575);
+}
+
+.square--occupied {
+  background-color: blue;
 }

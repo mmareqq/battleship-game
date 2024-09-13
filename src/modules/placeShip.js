@@ -12,11 +12,10 @@ class BoardManager {
       this.ship = new ShipToPlace(len, isVertical);
       this.ships = [null, null, 3, 2, 1, 1];
       this.buttons = document.querySelectorAll('.ship-direction');
-      this.shipsEl = document.querySelectorAll('.ship-btn');
+      this.shipsEl = Array.from(document.querySelectorAll('.ship-btn'));
       this.boardArray = null;
       this.boardEl = null;
       this.squares = null;
-
       this.init();
    }
 
@@ -57,13 +56,20 @@ class BoardManager {
          const row = parseInt(square.dataset.x);
          const col = parseInt(square.dataset.y);
          if (row === undefined || col === undefined) return;
-         this.paintSquares(square, 'square--hover');
+         const markedSquares = this.markSquares(square);
+         const canBePlaced = this.checkShipPlacement(markedSquares);
+         if (!canBePlaced) {
+            this.paintSquares(markedSquares, 'square--blocked');
+            return;
+         }
+         this.paintSquares(markedSquares, 'square--hover');
       });
    }
 
    clearBoard() {
       this.squares.forEach(square => {
          square.classList.remove('square--hover');
+         square.classList.remove('square--blocked');
       });
    }
 
@@ -74,17 +80,58 @@ class BoardManager {
       });
    }
 
+   switchActiveShip() {
+      const [activeShip] = this.shipsEl.filter(ship => ship.classList.contains('active'));
+      activeShip.classList.add('btn--inactive');
+      activeShip.classList.remove('active');
+      if (this.isAllPlaced()) return;
+      let index = this.ships.findIndex(val => val > 0);
+      console.log(index)
+      let nextShip = this.shipsEl[index];
+
+      console.log(nextShip)
+      nextShip.classList.add('active');
+      this.ship.length = parseInt(nextShip.dataset.ship);
+   }
+
    handleSquareClick = e => {
       const square = e.target;
-      this.paintSquares(square, 'square--occupied');
+      if (square.dataset.x === undefined || square.dataset.y === undefined) return;
+      const markedSquares = this.markSquares(square, 'square--occupied');
+      const canBePlaced = this.checkShipPlacement(markedSquares);
+      if (!canBePlaced) return;
+      this.paintSquares(markedSquares, 'square--occupied');
       this.decrementShipCounter(this.ship.length);
+
       if (this.isAllPlaced()) {
-         // Make OK button clickable to continue game
+         const continueBtn = document.querySelector('.continue-btn');
+         continueBtn.classList.remove('btn--inactive');
       }
    };
 
-   paintSquares(square, className) {
-      if (!square || !className) throw new Error('PaintSquares missing parameter');
+   checkShipPlacement(markedSquares) {
+      if (!markedSquares) return false;
+      for (const square of markedSquares) {
+         const row = parseInt(square.dataset.x);
+         const col = parseInt(square.dataset.y);
+         const edgeSquares = [];
+         if (row - 1 >= 0) edgeSquares.push(this.boardArray[row - 1][col]);
+         if (row + 1 <= 9) edgeSquares.push(this.boardArray[row + 1][col]);
+         if (col - 1 >= 0) edgeSquares.push(this.boardArray[row][col - 1]);
+         if (col + 1 <= 9) edgeSquares.push(this.boardArray[row][col + 1]);
+
+         for (const edge of edgeSquares) {
+            if (!edge || edge.classList.contains('square-mark')) continue;
+            if (edge.classList.contains('square--occupied')) {
+               return false;
+            }
+         }
+      }
+      return true;
+   }
+
+   markSquares(square) {
+      const markedSquares = [];
       const row = parseInt(square.dataset.x);
       const col = parseInt(square.dataset.y);
       if (row === undefined || col === undefined) throw new Error("Missing square's col or row data");
@@ -94,7 +141,7 @@ class BoardManager {
          if (i + this.ship.length > 10) return;
          while (i < 10 && i < row + this.ship.length) {
             const square = this.boardArray[i][col];
-            square.classList.add(className);
+            markedSquares.push(square);
             i++;
          }
       } else {
@@ -102,22 +149,30 @@ class BoardManager {
          if (i + this.ship.length > 10) return;
          while (i < 10 && i < col + this.ship.length) {
             const square = this.boardArray[row][i];
-            square.classList.add(className);
+            markedSquares.push(square);
             i++;
          }
       }
+
+      return markedSquares;
+   }
+
+   paintSquares(squares, className) {
+      if (!squares) return;
+      squares.forEach(square => {
+         square.classList.add(className);
+      });
    }
 
    isAllPlaced() {
-      return this.ships.reduce((acc, value) => acc || value) ? true : false;
+      return this.ships.reduce((acc, value) => acc || value) ? false : true;
    }
 
    decrementShipCounter(length) {
       this.ships[length] -= 1;
       const shipEl = document.querySelector(`.ship-btn[data-ship="${length}"]`);
-      this.ships[length] <= 0 ? shipEl.classList.add('btn--inactive') : shipEl.classList.remove('btn--inactive');
+      if (this.ships[length] <= 0) this.switchActiveShip();
       const counterEl = document.querySelector(`.ship-count[data-ship="${length}"]`);
-      console.log('counter: ', counterEl);
       counterEl.textContent = 'x' + this.ships[length];
    }
 
