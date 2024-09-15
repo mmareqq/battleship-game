@@ -1,15 +1,19 @@
 class Competitor {
    constructor(gameBoard) {
-      this.gameBoard = gameBoard
+      this.gameBoard = gameBoard;
    }
 }
 
 class Computer extends Competitor {
-
+   constructor() {
+      super(gameBoard)
+      this.name = 'Computer'
+   }
 }
 
 class Player extends Competitor {
-   constructor(gameBoard) {
-      super(gameBoard)
+   constructor(gameBoard, name) {
+      super(gameBoard);
+      this.name = name;
    }
 }

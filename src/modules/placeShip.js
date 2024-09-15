@@ -1,15 +1,6 @@
-class ShipToPlace {
-   constructor(length, isVertical) {
-      this.x = null;
-      this.y = null;
-      this.isVertical = isVertical;
-      this.length = length;
-   }
-}
-
 class BoardManager {
-   constructor(len = 5, isVertical = true) {
-      this.ship = new ShipToPlace(len, isVertical);
+   constructor(length = 5, isVertical = true) {
+      this.ship = { isVertical: isVertical, length: length };
       this.ships = [null, null, 3, 2, 1, 1];
       this.buttons = document.querySelectorAll('.ship-direction');
       this.shipsEl = Array.from(document.querySelectorAll('.ship-btn'));
@@ -51,13 +42,17 @@ class BoardManager {
       this.boardEl.addEventListener('mouseover', e => {
          if (this.ships[this.ship.length] <= 0) return;
          this.clearBoard();
+
          const square = e.target;
+         if (!square.classList.contains('square')) return;
          square.addEventListener('click', this.handleSquareClick);
          const row = parseInt(square.dataset.x);
          const col = parseInt(square.dataset.y);
-         if (row === undefined || col === undefined) return;
+         if (isNaN(row) || isNaN(col)) return;
+
          const markedSquares = this.markSquares(square);
          const canBePlaced = this.checkShipPlacement(markedSquares);
+
          if (!canBePlaced) {
             this.paintSquares(markedSquares, 'square--blocked');
             return;
@@ -80,34 +75,35 @@ class BoardManager {
       });
    }
 
-   switchActiveShip() {
-      const [activeShip] = this.shipsEl.filter(ship => ship.classList.contains('active'));
-      activeShip.classList.add('btn--inactive');
-      activeShip.classList.remove('active');
-      if (this.isAllPlaced()) return;
-      let index = this.ships.findIndex(val => val > 0);
-      console.log(index)
-      let nextShip = this.shipsEl[index];
-
-      console.log(nextShip)
-      nextShip.classList.add('active');
-      this.ship.length = parseInt(nextShip.dataset.ship);
-   }
-
    handleSquareClick = e => {
       const square = e.target;
       if (square.dataset.x === undefined || square.dataset.y === undefined) return;
-      const markedSquares = this.markSquares(square, 'square--occupied');
+
+      const markedSquares = this.markSquares(square);
       const canBePlaced = this.checkShipPlacement(markedSquares);
       if (!canBePlaced) return;
       this.paintSquares(markedSquares, 'square--occupied');
-      this.decrementShipCounter(this.ship.length);
+      this.decrementShipCounter();
 
       if (this.isAllPlaced()) {
          const continueBtn = document.querySelector('.continue-btn');
          continueBtn.classList.remove('btn--inactive');
       }
    };
+
+   mapBoardArray() {
+      let board = [];
+      this.boardArray.forEach(row => {
+         let boardRow = [];
+         row.forEach(square => {
+            if (square.classList.contains('square--occupied')) {
+               boardRow.push('o');
+            } else boardRow.push('');
+         });
+         board.push(boardRow);
+      });
+      return board;
+   }
 
    checkShipPlacement(markedSquares) {
       if (!markedSquares) return false;
@@ -134,7 +130,7 @@ class BoardManager {
       const markedSquares = [];
       const row = parseInt(square.dataset.x);
       const col = parseInt(square.dataset.y);
-      if (row === undefined || col === undefined) throw new Error("Missing square's col or row data");
+      if (isNaN(row) || isNaN(col)) return;
 
       if (this.ship.isVertical) {
          let i = row;
@@ -168,12 +164,27 @@ class BoardManager {
       return this.ships.reduce((acc, value) => acc || value) ? false : true;
    }
 
-   decrementShipCounter(length) {
+   decrementShipCounter() {
+      const length = parseInt(this.ship.length);
       this.ships[length] -= 1;
-      const shipEl = document.querySelector(`.ship-btn[data-ship="${length}"]`);
-      if (this.ships[length] <= 0) this.switchActiveShip();
+      if (this.ships[length] === 0) this.switchActiveShip();
       const counterEl = document.querySelector(`.ship-count[data-ship="${length}"]`);
       counterEl.textContent = 'x' + this.ships[length];
+   }
+
+   switchActiveShip() {
+      if (this.isAllPlaced()) return;
+
+      for (const ship of this.shipsEl) {
+         ship.classList.remove('active');
+         const index = parseInt(ship.dataset.ship);
+         if (this.ships[index] === 0) ship.classList.add('btn--inactive');
+      }
+
+      const nextShip = document.querySelector('.ship-btn:not(.btn--inactive)');
+      nextShip.classList.add('active');
+
+      this.ship.length = parseInt(nextShip.dataset.ship);
    }
 
    #addButtonsListeners() {
@@ -190,10 +201,11 @@ class BoardManager {
    #addShipsListeners() {
       this.shipsEl.forEach(shipBtn => {
          shipBtn.addEventListener('click', () => {
-            this.ship.length = parseInt(shipBtn.dataset.ship);
             for (const ship of this.shipsEl) {
                ship.classList.remove('active');
             }
+
+            this.ship.length = parseInt(shipBtn.dataset.ship);
             shipBtn.classList.add('active');
          });
       });

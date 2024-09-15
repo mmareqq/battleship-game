@@ -1,10 +1,6 @@
-const Ship = require('./ship.js');
-
 class GameBoard {
-   constructor(ships = []) {
-      this.board = this.initalizeBoard();
-      this.ships = ships;
-      this.hits = [];
+   constructor(board) {
+      this.board = board;
    }
 
    initalizeBoard() {
@@ -16,7 +12,7 @@ class GameBoard {
          }
          board.push(row);
       }
-      console.log(board)
+      console.log(board);
       return board;
    }
 
@@ -42,16 +38,10 @@ class GameBoard {
       return 0;
    }
 
-   addHit(x, y) {
-      this.hits.push([x, y]);
-   }
-
    isAllSunk() {
       return this.ships.reduce((acc, ship) => acc && ship.isDead);
    }
 }
 
-const game = new GameBoard([new Ship(2, 3, 5, true), new Ship(3, 3, 3, true)]);
-game.isAllSunk();
-// export default GameBoard
-module.exports = GameBoard;
+export default GameBoard;
+// module.exports = GameBoard;

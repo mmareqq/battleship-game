@@ -1,6 +1,7 @@
 import getTemplate from './modules/getTemplate';
 import BoardManager from './modules/placeShip';
-import BoardCreator from './modules/placeShip';
+import { Player, Computer } from './modules/player';
+import Game from './modules/gamePlay';
 import './styles/input.css';
 
 const board = await getTemplate('./templates/board.html');
@@ -18,23 +19,64 @@ async function fetchStartingPage() {
 async function init() {
    await fetchStartingPage();
    const btn = document.querySelector('.play-button');
-   startGame();
-   btn.addEventListener('click', startGame);
+   btn.addEventListener('click', initalizePlacements);
 }
 
-async function startGame() {
+async function initalizePlacements() {
    console.log('game started');
    const template = await getTemplate('./templates/boardCreator.html');
    document.body.innerHTML = template;
    const boardEl = document.querySelector('.board');
    boardEl.innerHTML = board;
-   let boardManager = new BoardManager()
+   let boardManager = new BoardManager();
 
-   const resetBtn = document.querySelector('.reset-btn')
+   const resetBtn = document.querySelector('.reset-btn');
    resetBtn.addEventListener('click', () => {
-      startGame()
-   })
-   
+      initalizePlacements();
+   });
+
+   const continueBtn = document.querySelector('.continue-btn');
+   continueBtn.addEventListener('click', () => {
+      let board = boardManager.mapBoardArray();
+
+      startGame(getPlayerBoard(), getComputerBoard());
+   });
+}
+
+function getComputerBoard() {
+   return [
+      ['o', '', '', '', '', 'o', 'o', 'o', 'o', ''],
+      ['o', '', '', '', '', '', '', '', '', ''],
+      ['o', '', '', '', '', '', '', '', '', ''],
+      ['o', '', '', '', '', '', 'o', 'o', '', ''],
+      ['o', '', 'o', '', '', '', '', '', '', ''],
+      ['', '', 'o', '', '', '', '', '', '', ''],
+      ['', '', 'o', '', '', '', 'o', 'o', '', ''],
+      ['', '', '', '', '', 'o', '', '', '', ''],
+      ['', '', '', '', '', 'o', '', '', '', ''],
+      ['', 'o', 'o', '', '', 'o', '', '', '', ''],
+   ];
+}
+
+function getPlayerBoard() {
+   return [
+      ['o', '', '', '', '', 'o', 'o', 'o', 'o', ''],
+      ['o', '', '', '', '', '', '', '', '', ''],
+      ['o', '', '', '', '', '', '', '', '', ''],
+      ['o', '', '', '', '', '', 'o', 'o', '', ''],
+      ['o', '', 'o', '', '', '', '', '', '', ''],
+      ['', '', 'o', '', '', '', '', '', '', ''],
+      ['', '', 'o', '', '', '', 'o', 'o', '', ''],
+      ['', '', '', '', '', 'o', '', '', '', ''],
+      ['', '', '', '', '', 'o', '', '', '', ''],
+      ['', 'o', 'o', '', '', 'o', '', '', '', ''],
+   ];
+}
+
+function startGame(board1, board2) {
+   const player1 = new Player(board1, 'Player 1');
+   const player2 = new Computer(board2);
+   const game = new Game(player1, player2);
 }
 
 init();
