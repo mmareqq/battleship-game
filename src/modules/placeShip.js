@@ -2,7 +2,7 @@ import GameBoard from './gameboard';
 
 class BoardManager {
    constructor(length = 5, isVertical = true) {
-      this.ship = { isVertical: isVertical, length: length };
+      this.ship = {length: length, isVertical: isVertical};
       this.shipLengths = [null, null, 3, 2, 1, 1];
       this.buttons = document.querySelectorAll('.ship-direction');
       this.shipsEl = Array.from(document.querySelectorAll('.ship-btn'));
@@ -84,6 +84,9 @@ class BoardManager {
       const markedSquares = this.markSquares(square);
       const canBePlaced = this.checkShipPlacement(markedSquares);
       if (!canBePlaced) return;
+      const shipSquares = markedSquares.map(square => [parseInt(square.dataset.x), parseInt(square.dataset.y)])
+      console.log(shipSquares)
+      this.gameBoard.ships.push(new Ship(shipSquares, this.ship.length))
       this.paintSquares(markedSquares, 'square--occupied');
       this.decrementShipCounter();
 

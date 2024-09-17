@@ -1,9 +1,20 @@
 class Ship {
-   constructor(squares, length) {
+   constructor(squares, length, isVertical = null) {
       this.squares = squares;
       this.length = length;
       this.hits = 0;
+      this.isVertical = isVertical;
       this.isDead = false;
+   }
+
+   markDeadShip() {
+      console.log('marked as dead')
+      this.squares.forEach(coord => {
+         const row = coord[0];
+         const col = coord[1];
+         const square = this.boardEl.querySelector(`.square[data-x="${row}"][data-y="${col}"]`);
+         square.classList.add('square--dead');
+      });
    }
 
    hit() {
@@ -16,5 +27,5 @@ class Ship {
    }
 }
 
-export default Ship
+export default Ship;
 // module.exports = Ship;

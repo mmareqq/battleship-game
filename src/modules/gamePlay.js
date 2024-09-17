@@ -31,7 +31,9 @@ class Game {
    #addListeners() {
       const squares = this.player2.boardEl.querySelectorAll('.square');
       squares.forEach(square => {
-         square.addEventListener('click', (e) => { this.handleAttack(e) });
+         square.addEventListener('click', e => {
+            this.handleAttack(e);
+         });
       });
    }
 
@@ -39,16 +41,14 @@ class Game {
       const square = e.target;
       const row = parseInt(square.dataset.x);
       const col = parseInt(square.dataset.y);
-      console.log(this.player2.gameBoard[row][col])
 
-      const squareHit = this.player2.boardEl.querySelector(`.square[data-x="${row}"][data-y="${col}"]`)
+      this.player2.gameBoard.receiveAttack(row, col);
 
-      if(this.player2.gameBoard[row][col] === 'o') { 
-         squareHit.classList.add('square--hit')
+      if (this.player2.gameBoard.board[row][col] === 'o') {
+         square.classList.add('square--hit');
       } else {
-         squareHit.classList.add('square--miss')
+         square.classList.add('square--miss');
       }
-      
    }
 }
 
