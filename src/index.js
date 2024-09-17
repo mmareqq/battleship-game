@@ -20,6 +20,7 @@ async function init() {
    await fetchStartingPage();
    const btn = document.querySelector('.play-button');
    btn.addEventListener('click', initalizePlacements);
+   initalizePlacements()
 }
 
 async function initalizePlacements() {
@@ -34,11 +35,11 @@ async function initalizePlacements() {
    resetBtn.addEventListener('click', () => {
       initalizePlacements();
    });
-
+   startGame(getPlayerBoard(), getComputerBoard());
    const continueBtn = document.querySelector('.continue-btn');
    continueBtn.addEventListener('click', () => {
       let board = boardManager.mapBoardArray();
-
+      boardManager = null; // Trash variable
       startGame(getPlayerBoard(), getComputerBoard());
    });
 }

@@ -261,3 +261,62 @@ a {
 .square--occupied {
   background-color: blue;
 }
+
+.attack-history {
+  width: 300px;
+  height: 400px;
+  margin-inline: auto;
+  margin-top: 3rem;
+  display: grid;
+  border: 1px solid black;
+}
+
+
+.square--hit {
+  pointer-events: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.square--hit::before, .square--hit::after {
+  content: '';
+  width: 150%;
+  height: 4px;
+  background-color: black;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+}
+
+.square--hit::before {
+  rotate: 45deg;
+}
+
+.square--hit::after {
+  rotate: -45deg;
+}
+
+
+.square--miss {
+  /* background-color: rgb(209, 209, 209); */
+  position: relative;
+  pointer-events: none;
+}
+
+.square--miss::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  width: .5rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background-color: #000000;
+}
+
+.square--dead {
+  background-color: black;
+  pointer-events: none;
+}

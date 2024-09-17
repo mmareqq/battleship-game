@@ -1,19 +1,21 @@
+import GameBoard from './gameboard';
+
 class BoardManager {
    constructor(length = 5, isVertical = true) {
       this.ship = { isVertical: isVertical, length: length };
-      this.ships = [null, null, 3, 2, 1, 1];
+      this.shipLengths = [null, null, 3, 2, 1, 1];
       this.buttons = document.querySelectorAll('.ship-direction');
       this.shipsEl = Array.from(document.querySelectorAll('.ship-btn'));
       this.boardArray = null;
-      this.boardEl = null;
+      this.gameBoard = new GameBoard();
       this.squares = null;
       this.init();
    }
 
    init() {
-      this.boardEl = document.querySelector('.game-board');
-      if (!this.boardEl) throw new Error("Couldn't find game-board el");
-      this.squares = this.boardEl.querySelectorAll('.square');
+      this.gameBoard.boardEl = document.querySelector('.game-board');
+      if (!this.gameBoard.boardEl) throw new Error("Couldn't find game-board el");
+      this.squares = this.gameBoard.boardEl.querySelectorAll('.square');
       this.#mapBoard();
       this.#addListener();
       this.#addButtonsListeners();
@@ -34,13 +36,13 @@ class BoardManager {
    }
 
    #addListener() {
-      this.boardEl.addEventListener('mouseout', e => {
+      this.gameBoard.boardEl.addEventListener('mouseout', e => {
          const square = e.target;
          square.removeEventListener('click', this.handleSquareClick);
       });
 
-      this.boardEl.addEventListener('mouseover', e => {
-         if (this.ships[this.ship.length] <= 0) return;
+      this.gameBoard.boardEl.addEventListener('mouseover', e => {
+         if (this.shipLengths[this.ship.length] <= 0) return;
          this.clearBoard();
 
          const square = e.target;
@@ -69,7 +71,7 @@ class BoardManager {
    }
 
    listenerRemover() {
-      this.boardEl.addEventListener('mouseout', e => {
+      this.gameBoard.boardEl.addEventListener('mouseout', e => {
          const square = e.target;
          square.removeEventListener('click', this.handleSquareClick);
       });
@@ -161,15 +163,15 @@ class BoardManager {
    }
 
    isAllPlaced() {
-      return this.ships.reduce((acc, value) => acc || value) ? false : true;
+      return this.shipLengths.reduce((acc, value) => acc || value) ? false : true;
    }
 
    decrementShipCounter() {
       const length = parseInt(this.ship.length);
-      this.ships[length] -= 1;
-      if (this.ships[length] === 0) this.switchActiveShip();
+      this.shipLengths[length] -= 1;
+      if (this.shipLengths[length] === 0) this.switchActiveShip();
       const counterEl = document.querySelector(`.ship-count[data-ship="${length}"]`);
-      counterEl.textContent = 'x' + this.ships[length];
+      counterEl.textContent = 'x' + this.shipLengths[length];
    }
 
    switchActiveShip() {
@@ -178,7 +180,7 @@ class BoardManager {
       for (const ship of this.shipsEl) {
          ship.classList.remove('active');
          const index = parseInt(ship.dataset.ship);
-         if (this.ships[index] === 0) ship.classList.add('btn--inactive');
+         if (this.shipLengths[index] === 0) ship.classList.add('btn--inactive');
       }
 
       const nextShip = document.querySelector('.ship-btn:not(.btn--inactive)');

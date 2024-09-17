@@ -4,6 +4,7 @@ class Game {
    constructor(player1, player2) {
       this.player1 = player1;
       this.player2 = player2;
+      this.move = this.player1;
       this.init();
    }
 
@@ -13,14 +14,41 @@ class Game {
       const gamePageURL = '../templates/gamePage.html';
       const gamePage = await getTemplate(gamePageURL);
       document.body.innerHTML = gamePage;
-      const sideOne = gamePage.querySelector('.wrapper-board1');
-      const sideTwo = gamePage.querySelector('.wrapper-board2');
+      const sideOne = document.querySelector('.wrapper-board1');
+      const sideTwo = document.querySelector('.wrapper-board2');
       sideOne.querySelector('.player-name').innerHTML = this.player1.name;
-      sideTwo.querySelector('.player-name').innerHTML = this.player1.name;
+      sideTwo.querySelector('.player-name').innerHTML = this.player2.name;
       const board1 = sideOne.querySelector('.game-board1');
       const board2 = sideTwo.querySelector('.game-board2');
       board1.innerHTML = board;
       board2.innerHTML = board;
+      this.player1.boardEl = board1.querySelector('.game-board');
+      this.player2.boardEl = board2.querySelector('.game-board');
+
+      this.#addListeners();
+   }
+
+   #addListeners() {
+      const squares = this.player2.boardEl.querySelectorAll('.square');
+      squares.forEach(square => {
+         square.addEventListener('click', (e) => { this.handleAttack(e) });
+      });
+   }
+
+   handleAttack(e) {
+      const square = e.target;
+      const row = parseInt(square.dataset.x);
+      const col = parseInt(square.dataset.y);
+      console.log(this.player2.gameBoard[row][col])
+
+      const squareHit = this.player2.boardEl.querySelector(`.square[data-x="${row}"][data-y="${col}"]`)
+
+      if(this.player2.gameBoard[row][col] === 'o') { 
+         squareHit.classList.add('square--hit')
+      } else {
+         squareHit.classList.add('square--miss')
+      }
+      
    }
 }
 

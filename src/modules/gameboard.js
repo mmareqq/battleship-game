@@ -1,42 +1,33 @@
 class GameBoard {
-   constructor(board) {
+   constructor(board = null) {
       this.board = board;
-   }
-
-   initalizeBoard() {
-      let board = [];
-      for (let i = 0; i < 10; i++) {
-         let row = [];
-         for (let j = 0; j < 10; j++) {
-            row.push('empty-not');
-         }
-         board.push(row);
-      }
-      console.log(board);
-      return board;
+      this.boardEl = null;
+      this.ships = [];
    }
 
    receiveAttack(x, y) {
-      this.addHit(x, y);
+      if(typeof x !== 'number') throw new Error('parameter is not a number')
+      const index = x * 10 + y;
       for (const ship of this.ships) {
-         if (ship.isVertical) {
-            if (x !== ship.x) continue;
-            if (y >= ship.y && y < ship.y + ship.length) {
-               ship.hit();
-               return 1;
-            }
-         } else {
-            if (y !== ship.y) continue;
-            if (x >= ship.x && x < ship.x + ship.length) {
-               console.log('GFDGGHGFGG');
-               console.log(ship);
-               ship.hit();
-               return 1;
+         const indices = ship.squares.map(arr => arr[0] * 10 + arr[1])
+         if(indices.contains(index)) {
+            ship.hit()
+            if(ship.isDead()) {
+               this.markDeadShip(ship)
+               this.isAllSunk();
             }
          }
-      }
-      return 0;
    }
+
+   markDeadShip(ship) {
+      ship.squares.forEach(coord => {
+         const row = coord[0]
+         const col = coord[1]
+         const square = this.boardEl.querySelector(`.square[data-x="${row}"][data-y="${col}"]`)
+         square.classList.add('square--dead')
+      });
+   }
+}
 
    isAllSunk() {
       return this.ships.reduce((acc, ship) => acc && ship.isDead);

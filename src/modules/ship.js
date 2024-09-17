@@ -1,15 +1,14 @@
 class Ship {
-   constructor(x, y, length, isVertical) {
-      this.x = x
-      this.y = y
+   constructor(squares, length) {
+      this.squares = squares;
       this.length = length;
-      this.isVertical = isVertical
       this.hits = 0;
       this.isDead = false;
    }
 
    hit() {
       this.hits += 1;
+      this.isSunk();
    }
 
    isSunk() {
@@ -17,5 +16,5 @@ class Ship {
    }
 }
 
-// export default Ship
-module.exports = Ship;
+export default Ship
+// module.exports = Ship;
