@@ -1,14 +1,13 @@
-class Ship {
-   constructor(squares, length, isVertical = null) {
+export default class Ship {
+   constructor(squares, length) {
       this.squares = squares;
       this.length = length;
       this.hits = 0;
-      this.isVertical = isVertical;
       this.isDead = false;
    }
 
    markDeadShip() {
-      console.log('marked as dead')
+      console.log('marked as dead');
       this.squares.forEach(coord => {
          const row = coord[0];
          const col = coord[1];
@@ -23,9 +22,9 @@ class Ship {
    }
 
    isSunk() {
-      if (this.length === this.hits) this.isDead = true;
+      if (this.length === this.hits) {
+         this.isDead = true;
+         this.markDeadShip();
+      }
    }
 }
-
-export default Ship;
-// module.exports = Ship;

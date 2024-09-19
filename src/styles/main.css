@@ -252,6 +252,7 @@ a {
 .btn--inactive {
   pointer-events: none;
   opacity: .75;
+  
 }
 
 .square--blocked {

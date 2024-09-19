@@ -1,53 +1,37 @@
 import GameBoard from './gameboard';
+import Ship from './ship';
 
-class BoardManager {
+export default class BoardManager {
    constructor(length = 5, isVertical = true) {
-      this.ship = {length: length, isVertical: isVertical};
+      this.ship = { length: length, isVertical: isVertical };
       this.shipLengths = [null, null, 3, 2, 1, 1];
-      this.buttons = document.querySelectorAll('.ship-direction');
+      this.shipDirBtns = document.querySelectorAll('.ship-direction');
       this.shipsEl = Array.from(document.querySelectorAll('.ship-btn'));
-      this.boardArray = null;
-      this.gameBoard = new GameBoard();
-      this.squares = null;
+      this.gameBoard = null;
       this.init();
    }
 
    init() {
-      this.gameBoard.boardEl = document.querySelector('.game-board');
-      if (!this.gameBoard.boardEl) throw new Error("Couldn't find game-board el");
-      this.squares = this.gameBoard.boardEl.querySelectorAll('.square');
-      this.#mapBoard();
+      console.log('initalizing board manager')
+      const boardEl = document.querySelector('.game-board')
+      if (!boardEl) throw new Error("Couldn't find game-board el");
+      this.gameBoard = new GameBoard(boardEl)
       this.#addListener();
+      this.#removeSquareListener();
       this.#addButtonsListeners();
       this.#addShipsListeners();
    }
 
-   #mapBoard() {
-      this.boardArray = [];
-
-      for (let i = 0; i < 10; i++) {
-         let row = [];
-         for (let j = 0; j < 10; j++) {
-            let index = i * 10 + j;
-            row.push(this.squares[index]);
-         }
-         this.boardArray.push(row);
-      }
-   }
-
    #addListener() {
-      this.gameBoard.boardEl.addEventListener('mouseout', e => {
-         const square = e.target;
-         square.removeEventListener('click', this.handleSquareClick);
-      });
-
       this.gameBoard.boardEl.addEventListener('mouseover', e => {
          if (this.shipLengths[this.ship.length] <= 0) return;
-         this.clearBoard();
+         this.gameBoard.clearBoard();
 
          const square = e.target;
          if (!square.classList.contains('square')) return;
+
          square.addEventListener('click', this.handleSquareClick);
+
          const row = parseInt(square.dataset.x);
          const col = parseInt(square.dataset.y);
          if (isNaN(row) || isNaN(col)) return;
@@ -55,22 +39,12 @@ class BoardManager {
          const markedSquares = this.markSquares(square);
          const canBePlaced = this.checkShipPlacement(markedSquares);
 
-         if (!canBePlaced) {
-            this.paintSquares(markedSquares, 'square--blocked');
-            return;
-         }
-         this.paintSquares(markedSquares, 'square--hover');
+         if (!canBePlaced) this.paintSquares(markedSquares, 'square--blocked');
+         else this.paintSquares(markedSquares, 'square--hover');
       });
    }
 
-   clearBoard() {
-      this.squares.forEach(square => {
-         square.classList.remove('square--hover');
-         square.classList.remove('square--blocked');
-      });
-   }
-
-   listenerRemover() {
+   #removeSquareListener() {
       this.gameBoard.boardEl.addEventListener('mouseout', e => {
          const square = e.target;
          square.removeEventListener('click', this.handleSquareClick);
@@ -84,9 +58,10 @@ class BoardManager {
       const markedSquares = this.markSquares(square);
       const canBePlaced = this.checkShipPlacement(markedSquares);
       if (!canBePlaced) return;
-      const shipSquares = markedSquares.map(square => [parseInt(square.dataset.x), parseInt(square.dataset.y)])
-      console.log(shipSquares)
-      this.gameBoard.ships.push(new Ship(shipSquares, this.ship.length))
+
+      const shipSquares = markedSquares.map(square => [parseInt(square.dataset.x), parseInt(square.dataset.y)]);
+      this.gameBoard.ships.push(new Ship(shipSquares, this.ship.length));
+
       this.paintSquares(markedSquares, 'square--occupied');
       this.decrementShipCounter();
 
@@ -96,30 +71,16 @@ class BoardManager {
       }
    };
 
-   mapBoardArray() {
-      let board = [];
-      this.boardArray.forEach(row => {
-         let boardRow = [];
-         row.forEach(square => {
-            if (square.classList.contains('square--occupied')) {
-               boardRow.push('o');
-            } else boardRow.push('');
-         });
-         board.push(boardRow);
-      });
-      return board;
-   }
-
    checkShipPlacement(markedSquares) {
       if (!markedSquares) return false;
       for (const square of markedSquares) {
          const row = parseInt(square.dataset.x);
          const col = parseInt(square.dataset.y);
          const edgeSquares = [];
-         if (row - 1 >= 0) edgeSquares.push(this.boardArray[row - 1][col]);
-         if (row + 1 <= 9) edgeSquares.push(this.boardArray[row + 1][col]);
-         if (col - 1 >= 0) edgeSquares.push(this.boardArray[row][col - 1]);
-         if (col + 1 <= 9) edgeSquares.push(this.boardArray[row][col + 1]);
+         if (row - 1 >= 0) edgeSquares.push(this.gameBoard.squaresArray[row - 1][col]);
+         if (row + 1 <= 9) edgeSquares.push(this.gameBoard.squaresArray[row + 1][col]);
+         if (col - 1 >= 0) edgeSquares.push(this.gameBoard.squaresArray[row][col - 1]);
+         if (col + 1 <= 9) edgeSquares.push(this.gameBoard.squaresArray[row][col + 1]);
 
          for (const edge of edgeSquares) {
             if (!edge || edge.classList.contains('square-mark')) continue;
@@ -141,7 +102,7 @@ class BoardManager {
          let i = row;
          if (i + this.ship.length > 10) return;
          while (i < 10 && i < row + this.ship.length) {
-            const square = this.boardArray[i][col];
+            const square = this.gameBoard.squaresArray[i][col];
             markedSquares.push(square);
             i++;
          }
@@ -149,7 +110,7 @@ class BoardManager {
          let i = col;
          if (i + this.ship.length > 10) return;
          while (i < 10 && i < col + this.ship.length) {
-            const square = this.boardArray[row][i];
+            const square = this.gameBoard.squaresArray[row][i];
             markedSquares.push(square);
             i++;
          }
@@ -183,7 +144,10 @@ class BoardManager {
       for (const ship of this.shipsEl) {
          ship.classList.remove('active');
          const index = parseInt(ship.dataset.ship);
-         if (this.shipLengths[index] === 0) ship.classList.add('btn--inactive');
+         if (this.shipLengths[index] === 0) {
+            ship.classList.add('btn--inactive');
+            ship.classList.remove('active')
+         }
       }
 
       const nextShip = document.querySelector('.ship-btn:not(.btn--inactive)');
@@ -193,10 +157,10 @@ class BoardManager {
    }
 
    #addButtonsListeners() {
-      this.buttons.forEach(btn => {
+      this.shipDirBtns.forEach(btn => {
          btn.addEventListener('click', () => {
-            this.buttons[0].dataset.selected = 'false';
-            this.buttons[1].dataset.selected = 'false';
+            this.shipDirBtns[0].dataset.selected = 'false';
+            this.shipDirBtns[1].dataset.selected = 'false';
             btn.dataset.selected = 'true';
             this.ship.isVertical = btn.dataset.dir === 'ver';
          });
@@ -209,12 +173,8 @@ class BoardManager {
             for (const ship of this.shipsEl) {
                ship.classList.remove('active');
             }
-
             this.ship.length = parseInt(shipBtn.dataset.ship);
-            shipBtn.classList.add('active');
          });
       });
    }
 }
-
-export default BoardManager;

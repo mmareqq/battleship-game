@@ -3,6 +3,7 @@ import BoardManager from './modules/placeShip';
 import { Player, Computer } from './modules/player';
 import Game from './modules/gamePlay';
 import './styles/input.css';
+import GameBoard from './modules/gameboard';
 
 const board = await getTemplate('./templates/board.html');
 
@@ -75,9 +76,11 @@ function getPlayerBoard() {
 }
 
 function startGame(board1, board2) {
+   // const gameBoard1 = new GameBoard(board1)
+   // const gameBoard2 = new GameBoard(board2)
    const player1 = new Player(board1, 'Player 1');
    const player2 = new Computer(board2);
-   const game = new Game(player1, player2);
+   // const game = new Game(player1, player2);
 }
 
 init();

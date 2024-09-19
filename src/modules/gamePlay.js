@@ -5,6 +5,7 @@ class Game {
       this.player1 = player1;
       this.player2 = player2;
       this.move = this.player1;
+      this.boardArray = null;
       this.init();
    }
 
