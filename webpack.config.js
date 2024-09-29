@@ -3,22 +3,32 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 // const CopyPlugin = require("copy-webpack-plugin")
 // const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 // const TerserPlugin = require('terser-webpack-plugin');
+
 module.exports = {
   mode: "development",
   entry: './src/index.js',
-  output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist'),
-    clean: true
+  // output: {
+  //   filename: 'bundle.js',
+  //   path: path.resolve(__dirname, 'dist'),
+  //   clean: true
+  // },
+  resolve: {
+    modules: ['node_modules'],
   },
-  devtool: "eval",
+  devtool: "eval-source-map",
   devServer: {
+    watchFiles: ['src/**/*'],
     static: {
       directory: path.join(__dirname, 'src')
     },
     port: 5000,
     compress: true,
     hot: true,
+  },
+
+  watchOptions: {
+    ignored: /node_modules/,
+    aggregateTimeout: 300,
   },
 
   performance: {
