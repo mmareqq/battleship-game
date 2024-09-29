@@ -39,48 +39,20 @@ async function initalizePlacements() {
    startGame(getPlayerBoard(), getComputerBoard());
    const continueBtn = document.querySelector('.continue-btn');
    continueBtn.addEventListener('click', () => {
-      let board = boardManager.mapBoardArray();
-      boardManager = null; // Trash variable
+      let board = boardManager.gameBoard;
+      console.log('the board:', board)
       startGame(getPlayerBoard(), getComputerBoard());
    });
 }
 
-function getComputerBoard() {
-   return [
-      ['o', '', '', '', '', 'o', 'o', 'o', 'o', ''],
-      ['o', '', '', '', '', '', '', '', '', ''],
-      ['o', '', '', '', '', '', '', '', '', ''],
-      ['o', '', '', '', '', '', 'o', 'o', '', ''],
-      ['o', '', 'o', '', '', '', '', '', '', ''],
-      ['', '', 'o', '', '', '', '', '', '', ''],
-      ['', '', 'o', '', '', '', 'o', 'o', '', ''],
-      ['', '', '', '', '', 'o', '', '', '', ''],
-      ['', '', '', '', '', 'o', '', '', '', ''],
-      ['', 'o', 'o', '', '', 'o', '', '', '', ''],
-   ];
-}
-
-function getPlayerBoard() {
-   return [
-      ['o', '', '', '', '', 'o', 'o', 'o', 'o', ''],
-      ['o', '', '', '', '', '', '', '', '', ''],
-      ['o', '', '', '', '', '', '', '', '', ''],
-      ['o', '', '', '', '', '', 'o', 'o', '', ''],
-      ['o', '', 'o', '', '', '', '', '', '', ''],
-      ['', '', 'o', '', '', '', '', '', '', ''],
-      ['', '', 'o', '', '', '', 'o', 'o', '', ''],
-      ['', '', '', '', '', 'o', '', '', '', ''],
-      ['', '', '', '', '', 'o', '', '', '', ''],
-      ['', 'o', 'o', '', '', 'o', '', '', '', ''],
-   ];
-}
 
 function startGame(board1, board2) {
-   // const gameBoard1 = new GameBoard(board1)
-   // const gameBoard2 = new GameBoard(board2)
+   
+   const gameBoard1 = new GameBoard(board1)
+   const gameBoard2 = new GameBoard(board2)
    const player1 = new Player(board1, 'Player 1');
    const player2 = new Computer(board2);
-   // const game = new Game(player1, player2);
+   const game = new Game(player1, player2);
 }
 
 init();

@@ -1,25 +1,27 @@
-export default class GameBoard {
-   constructor(boardEl = null, boardArray = null, ships = []) {
-      this.boardEl = boardEl;
-      this.boardArray = boardArray;
+export class BoardInterface {
+   constructor(ships = [], boardEl = null) {
+      this._boardEl = boardEl;
       this.squares = null;
       this.squaresArray = null;
-      this.ships = ships;
+      this.board = new Board(ships);
+   }
+
+   set boardEl(newBoard) {
+      if(!newBoard) return;
+      this._boardEl = newBoard;
       this.init();
    }
 
+   get boardEl() { return this._boardEl }
 
    init() {
-      if(!this.boardEl) return;
-      this.squares = this.boardEl.querySelectorAll('.square')
-      console.log(this.squares)
+      this.squares = this.boardEl.querySelectorAll('.square');
       this.#mapSquaresBoard();
-      console.log(this.boardArray)
       this.addListeners();
    }
 
    #mapSquaresBoard() {
-      if(!this.squares) return;
+      if (!this.squares) return;
       this.squaresArray = [];
 
       for (let i = 0; i < 10; i++) {
@@ -32,35 +34,6 @@ export default class GameBoard {
       }
    }
 
-   mapBoardArray() {
-      let board = [];
-      this.gameBoard.boardArray.forEach(row => {
-         let boardRow = [];
-         row.forEach(square => {
-            if (square.classList.contains('square--occupied')) {
-               boardRow.push('o');
-            } else boardRow.push('');
-         });
-         board.push(boardRow);
-      });
-      return board;
-   }
-
-   receiveAttack(x, y) {
-      if (typeof x !== 'number') throw new Error('parameter is not a number');
-      const index = x * 10 + y;
-      for (const ship of this.ships) {
-         const indices = ship.squares.map(arr => arr[0] * 10 + arr[1]);
-         if (indices.contains(index)) {
-            ship.hit();
-            if (ship.isDead()) {
-               // To Be Continued
-               if(this.isAllSunk()) alert('GAME OVER')
-            }
-         }
-      }
-   }
-
    clearBoard() {
       this.squares.forEach(square => {
          square.classList.remove('square--hover');
@@ -68,16 +41,62 @@ export default class GameBoard {
       });
    }
 
-   isAllSunk() {
-      return this.ships.reduce((acc, ship) => acc && ship.isDead);
+   markAttack(x, y) {
+      // Mark squares to correct color
    }
 
    addListeners() {
       this.squares.forEach(square => {
-         // To Be Continued
-         // square.addEventListener('click', )
-         
+         square.addEventListener('click', () => {
+            const x = parseInt(square.dataset.x);
+            const y = parseInt(square.dataset.y);
+            this.markAttack(x, y);
+            this.board.receiveAttack(x, y);
+         });
       });
    }
 }
 
+export class Board {
+   constructor(ships) {
+      this.ships = ships;
+      this.mappedBoard = this.mapBoardArray();
+   }
+
+   receiveAttack(x, y) {
+      const square = this.mappedBoard[x][y];
+      if (!square === '') return;
+      if (!square === undefined) throw new Error('Square was not found in mapped board');
+
+      const ship = this.ships[square.id];
+      ship.hit();
+
+      if (this.isAllSunk()) {
+         alert('GAME OVER');
+         // FURTHER ENDING OF THE GAME
+      }
+   }
+
+   mapBoardArray() {
+      if (this.ships.length === 0) return null;
+      let board = [];
+      for (let i = 0; i < 10; i++) {
+         let row = [];
+         for (let j = 0; j < 10; j++) {
+            row.push('');
+         }
+         board.push(row);
+      }
+
+      this.ships.forEach((ship, index) => {
+         ship.squares.forEach(square => {
+            board[square[0]][square[1]] = { id: index, status: 'o' };
+         });
+      });
+      return board;
+   }
+
+   isAllSunk() {
+      return this.ships.reduce((acc, ship) => acc && ship.isDead, true);
+   }
+}
