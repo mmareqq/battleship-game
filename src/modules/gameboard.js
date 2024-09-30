@@ -1,23 +1,26 @@
-export class BoardInterface {
-   constructor(ships = [], boardEl = null) {
-      this._boardEl = boardEl;
+export class BoardUI {
+   constructor(boardEl = null) {
+      this.boardEl = boardEl;
       this.squares = null;
       this.squaresArray = null;
-      this.board = new Board(ships);
+      this.init();
    }
 
    set boardEl(newBoard) {
-      if(!newBoard) return;
+      if (!newBoard) return;
       this._boardEl = newBoard;
       this.init();
    }
 
-   get boardEl() { return this._boardEl }
+   get boardEl() {
+      return this._boardEl;
+   }
 
    init() {
+      if (!this.boardEl) return;
       this.squares = this.boardEl.querySelectorAll('.square');
       this.#mapSquaresBoard();
-      this.addListeners();
+      this.#addListeners();
    }
 
    #mapSquaresBoard() {
@@ -45,20 +48,19 @@ export class BoardInterface {
       // Mark squares to correct color
    }
 
-   addListeners() {
+   #addListeners() {
       this.squares.forEach(square => {
          square.addEventListener('click', () => {
             const x = parseInt(square.dataset.x);
             const y = parseInt(square.dataset.y);
-            this.markAttack(x, y);
-            this.board.receiveAttack(x, y);
+            this.markAttack(square);
          });
       });
    }
 }
 
 export class Board {
-   constructor(ships) {
+   constructor(ships = []) {
       this.ships = ships;
       this.mappedBoard = this.mapBoardArray();
    }
@@ -78,7 +80,7 @@ export class Board {
    }
 
    mapBoardArray() {
-      if (this.ships.length === 0) return null;
+      if (!this.ships) return null;
       let board = [];
       for (let i = 0; i < 10; i++) {
          let row = [];
@@ -87,7 +89,7 @@ export class Board {
          }
          board.push(row);
       }
-
+      
       this.ships.forEach((ship, index) => {
          ship.squares.forEach(square => {
             board[square[0]][square[1]] = { id: index, status: 'o' };

@@ -14,7 +14,7 @@ export default class Ship {
    //       const square = this.boardEl.querySelector(`.square[data-x="${row}"][data-y="${col}"]`);
    //       square.classList.add('square--dead');
    //    });
-   // }
+   // 
 
    hit() {
       this.hits += 1;

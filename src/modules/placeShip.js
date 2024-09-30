@@ -1,21 +1,23 @@
-import GameBoard from './gameboard';
+import {Board, BoardUI} from './gameboard';
 import Ship from './ship';
 
-export default class BoardManager {
-   constructor(length = 5, isVertical = true) {
-      this.ship = { length: length, isVertical: isVertical };
-      this.shipLengths = [null, null, 3, 2, 1, 1];
+export default class PlaceShipManager {
+   constructor() {
+      this.ship = { length: 5, isVertical: true };
+      this.shipLengths = [null, null, 0, 0, 0, 2];
+      // Value represents quantity of the ship, index represents length of the ship
       this.shipDirBtns = document.querySelectorAll('.ship-direction');
-      this.shipsEl = Array.from(document.querySelectorAll('.ship-btn'));
-      this.gameBoard = null;
+      this.shipsEl = Array.from(document.querySelectorAll('.ship-btn')); // Remove change to arry
+      this.boardUI = null;
+      this.board = new Board();
       this.init();
    }
 
    init() {
-      console.log('initalizing board manager')
-      const boardEl = document.querySelector('.game-board')
+      const boardEl = document.querySelector('.game-board');
       if (!boardEl) throw new Error("Couldn't find game-board el");
-      this.gameBoard = new GameBoard(boardEl)
+      this.boardUI = new BoardUI(boardEl);
+
       this.#addListener();
       this.#removeSquareListener();
       this.#addButtonsListeners();
@@ -23,9 +25,9 @@ export default class BoardManager {
    }
 
    #addListener() {
-      this.gameBoard.boardEl.addEventListener('mouseover', e => {
+      this.boardUI.boardEl.addEventListener('mouseover', e => {
          if (this.shipLengths[this.ship.length] <= 0) return;
-         this.gameBoard.clearBoard();
+         this.boardUI.clearBoard();
 
          const square = e.target;
          if (!square.classList.contains('square')) return;
@@ -45,7 +47,7 @@ export default class BoardManager {
    }
 
    #removeSquareListener() {
-      this.gameBoard.boardEl.addEventListener('mouseout', e => {
+      this.boardUI.boardEl.addEventListener('mouseout', e => {
          const square = e.target;
          square.removeEventListener('click', this.handleSquareClick);
       });
@@ -60,7 +62,7 @@ export default class BoardManager {
       if (!canBePlaced) return;
 
       const shipSquares = markedSquares.map(square => [parseInt(square.dataset.x), parseInt(square.dataset.y)]);
-      this.gameBoard.ships.push(new Ship(shipSquares, this.ship.length));
+      this.board.ships.push(new Ship(shipSquares, this.ship.length));
 
       this.paintSquares(markedSquares, 'square--occupied');
       this.decrementShipCounter();
@@ -77,10 +79,10 @@ export default class BoardManager {
          const row = parseInt(square.dataset.x);
          const col = parseInt(square.dataset.y);
          const edgeSquares = [];
-         if (row - 1 >= 0) edgeSquares.push(this.gameBoard.squaresArray[row - 1][col]);
-         if (row + 1 <= 9) edgeSquares.push(this.gameBoard.squaresArray[row + 1][col]);
-         if (col - 1 >= 0) edgeSquares.push(this.gameBoard.squaresArray[row][col - 1]);
-         if (col + 1 <= 9) edgeSquares.push(this.gameBoard.squaresArray[row][col + 1]);
+         if (row - 1 >= 0) edgeSquares.push(this.boardUI.squaresArray[row - 1][col]);
+         if (row + 1 <= 9) edgeSquares.push(this.boardUI.squaresArray[row + 1][col]);
+         if (col - 1 >= 0) edgeSquares.push(this.boardUI.squaresArray[row][col - 1]);
+         if (col + 1 <= 9) edgeSquares.push(this.boardUI.squaresArray[row][col + 1]);
 
          for (const edge of edgeSquares) {
             if (!edge || edge.classList.contains('square-mark')) continue;
@@ -102,7 +104,7 @@ export default class BoardManager {
          let i = row;
          if (i + this.ship.length > 10) return;
          while (i < 10 && i < row + this.ship.length) {
-            const square = this.gameBoard.squaresArray[i][col];
+            const square = this.boardUI.squaresArray[i][col];
             markedSquares.push(square);
             i++;
          }
@@ -110,7 +112,7 @@ export default class BoardManager {
          let i = col;
          if (i + this.ship.length > 10) return;
          while (i < 10 && i < col + this.ship.length) {
-            const square = this.gameBoard.squaresArray[row][i];
+            const square = this.boardUI.squaresArray[row][i];
             markedSquares.push(square);
             i++;
          }
@@ -146,7 +148,7 @@ export default class BoardManager {
          const index = parseInt(ship.dataset.ship);
          if (this.shipLengths[index] === 0) {
             ship.classList.add('btn--inactive');
-            ship.classList.remove('active')
+            ship.classList.remove('active');
          }
       }
 

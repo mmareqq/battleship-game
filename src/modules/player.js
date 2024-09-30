@@ -1,13 +1,17 @@
+import { Board, BoardUI } from "./gameboard";
+
 class Computer {
-   constructor(gameBoard) {
-      this.gameBoard = gameBoard;
+   constructor(ships) {
+      this.board = new Board(ships)
+      this.boardUI = new BoardUI()
       this.name = 'Computer';
    }
 }
 
 class Player {
-   constructor(gameBoard, name) {
-      this.gameBoard = gameBoard;
+   constructor(ships, name) {
+      this.board = new Board(ships);
+      this.boardUI = new BoardUI();
       this.name = name;
    }
 }
