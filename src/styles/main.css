@@ -145,6 +145,7 @@ a {
   grid-template-columns: repeat(11, 50px);
   grid-template-rows: repeat(11, 50px);
   outline: 1px solid black;
+  user-select: none;
 }
 
 .square {
@@ -156,6 +157,7 @@ a {
 .square-mark {
   display: grid;
   place-content: center;
+  user-select: none;
 }
 
 .play-button:hover {

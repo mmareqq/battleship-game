@@ -4,7 +4,7 @@ import Ship from './ship';
 export default class PlaceShipManager {
    constructor() {
       this.ship = { length: 5, isVertical: true };
-      this.shipLengths = [null, null, 0, 0, 0, 2];
+      this.shipLengths = [null, null, 3, 2, 1, 1];
       // Value represents quantity of the ship, index represents length of the ship
       this.shipDirBtns = document.querySelectorAll('.ship-direction');
       this.shipsEl = Array.from(document.querySelectorAll('.ship-btn')); // Remove change to arry

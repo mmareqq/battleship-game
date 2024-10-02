@@ -65,17 +65,28 @@ export class Board {
       this.mappedBoard = this.mapBoardArray();
    }
 
-   receiveAttack(x, y) {
-      const square = this.mappedBoard[x][y];
-      if (!square === '') return;
+   receiveAttack(square, boardEl) {
       if (!square === undefined) throw new Error('Square was not found in mapped board');
 
-      const ship = this.ships[square.id];
-      ship.hit();
+      const row = parseInt(square.dataset.x);
+      const col = parseInt(square.dataset.y);
 
-      if (this.isAllSunk()) {
-         alert('GAME OVER');
-         // FURTHER ENDING OF THE GAME
+      if (this.mappedBoard[row][col].status === 'o') {
+         square.classList.add('square--hit');
+
+         const ship = this.ships[this.mappedBoard[row][col].id];
+         ship.hit();
+
+         if (ship.isSunk()) {
+            ship.markDead(boardEl);
+            
+            if (this.isAllSunk()) {
+               alert('GAME OVER');
+               // FURTHER ENDING OF THE GAME
+            }
+         }
+      } else {
+         square.classList.add('square--miss');
       }
    }
 
@@ -89,7 +100,7 @@ export class Board {
          }
          board.push(row);
       }
-      
+
       this.ships.forEach((ship, index) => {
          ship.squares.forEach(square => {
             board[square[0]][square[1]] = { id: index, status: 'o' };
@@ -99,6 +110,6 @@ export class Board {
    }
 
    isAllSunk() {
-      return this.ships.reduce((acc, ship) => acc && ship.isDead, true);
+      return this.ships.reduce((acc, ship) => acc && ship.isSunk(), true);
    }
 }
