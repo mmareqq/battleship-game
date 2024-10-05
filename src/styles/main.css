@@ -148,25 +148,25 @@ a {
   user-select: none;
 }
 
-.square {
-  outline: 1px solid black;
-  cursor: pointer;
-  transition: background-color var(--transition-very-fast);
-}
-
-.square-mark {
-  display: grid;
-  place-content: center;
-  user-select: none;
-}
-
-.play-button:hover {
+.play-btn:hover {
   rotate: 2deg;
   box-shadow: -5px 20px 10px -15px rgb(182, 182, 182);
 }
 
-.play-button {
+.play-btn {
+  text-wrap: nowrap;
+  font-size: 1.25rem;
+  margin-inline: auto;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .5rem 5rem;
   transition: all var(--transition-fast);
+}
+
+.play-btn img {
+  width: 3ch;
 }
 
 .ship-btn-container li::before {
@@ -181,7 +181,7 @@ a {
 }
 
 .ship-btn img {
-  transition: all var(--transition-normal);
+  transition: all var(--transition-fast);
 }
 
 .ship-btn {
@@ -192,11 +192,15 @@ a {
 }
 
 .ship-btn:hover img {
-    filter: drop-shadow(5px 5px 5px rgb(24, 79, 138));
+    filter: drop-shadow(5px 5px 3px rgb(24, 79, 138));
 }
 
 .ship-btn.active img {
-  filter: drop-shadow(0px 0px 5px rgb(24, 79, 138));
+  scale: 1.1;
+  /* filter: drop-shadow(5px 5px 3px rgb(24, 79, 138)); */
+}
+
+.ship-btn.active {
 }
 
 .switch-dir-btn {
@@ -246,6 +250,20 @@ a {
   left: unset;
 }
 
+
+.square {
+  outline: 1px solid black;
+  cursor: pointer;
+  transition: background-color var(--transition-very-fast);
+}
+
+.square-mark {
+  display: grid;
+  place-content: center;
+  user-select: none;
+}
+
+
 .square--hover {
   background-color: rgb(24, 79, 138);
 }
@@ -264,16 +282,6 @@ a {
 .square--occupied {
   background-color: blue;
 }
-
-.attack-history {
-  width: 300px;
-  height: 400px;
-  margin-inline: auto;
-  margin-top: 3rem;
-  display: grid;
-  border: 1px solid black;
-}
-
 
 .square--hit {
   pointer-events: none;
@@ -322,4 +330,13 @@ a {
 .square--dead {
   background-color: black;
   pointer-events: none;
+}
+
+.attack-history {
+  width: 300px;
+  height: 400px;
+  margin-inline: auto;
+  margin-top: 3rem;
+  display: grid;
+  border: 1px solid black;
 }

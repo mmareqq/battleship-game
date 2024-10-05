@@ -1,4 +1,4 @@
-import {Board, BoardUI} from './gameboard';
+import { Board, BoardUI } from './gameboard';
 import Ship from './ship';
 
 export default class PlaceShipManager {
@@ -132,14 +132,22 @@ export default class PlaceShipManager {
       return this.shipLengths.reduce((acc, value) => acc || value) ? false : true;
    }
 
+   // code to improve
    decrementShipCounter() {
       const length = parseInt(this.ship.length);
       this.shipLengths[length] -= 1;
-      if (this.shipLengths[length] === 0) this.switchActiveShip();
+      if (this.shipLengths[length] === 0) {
+         this.switchActiveShip();
+         if (length === 2) {
+            const ship = this.shipsEl.at(-1);
+            ship.classList.add('btn--inactive');
+         }
+      }
       const counterEl = document.querySelector(`.ship-count[data-ship="${length}"]`);
       counterEl.textContent = 'x' + this.shipLengths[length];
    }
 
+   // code to improve
    switchActiveShip() {
       if (this.isAllPlaced()) return;
 
@@ -176,6 +184,7 @@ export default class PlaceShipManager {
                ship.classList.remove('active');
             }
             this.ship.length = parseInt(shipBtn.dataset.ship);
+            shipBtn.classList.add('active');
          });
       });
    }
