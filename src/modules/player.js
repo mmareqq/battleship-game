@@ -1,18 +1,31 @@
-import { Board, BoardUI } from "./gameboard";
+import { Board, BoardUI } from './gameboard';
 
-class Computer {
-   constructor(ships) {
-      this.board = new Board(ships)
-      this.boardUI = new BoardUI()
-      this.name = 'Computer';
-   }
-}
-
-class Player {
+class Competitor {
    constructor(ships, name) {
       this.board = new Board(ships);
       this.boardUI = new BoardUI();
-      this.name = name;
+      this._name = name;
+   }
+
+   get name() {
+      return this._name;
+   }
+
+   set name(newName) {
+      if (!newName) console.warn('Name not provided for setter');
+      this._name = newName;
+   }
+}
+
+class Computer extends Competitor {
+   constructor(ships, name = 'Computer') {
+      super(ships, name);
+   }
+}
+
+class Player extends Competitor {
+   constructor(ships, name) {
+      super(ships, name);
    }
 }
 

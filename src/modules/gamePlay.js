@@ -1,6 +1,6 @@
 import getRandomNum from './getRandom';
 
-class Game {
+export default class GamePlay {
    constructor(player1, player2) {
       this.player1 = player1;
       this.player2 = player2;
@@ -30,11 +30,19 @@ class Game {
    }
 
    handleComputerAttack() {
-      const row = getRandomNum(0, 9);
-      const col = getRandomNum(0, 9);
-      const square = this.player1.boardUI.boardEl.querySelector(`.square[data-x="${row}"][data-y="${col}"]`);
-      this.player1.board.receiveAttack(square, this.player1.boardUI.boardEl)
+      let row, col, square;
+      let i = 0;
+      do {
+         i++;
+         if (i > 250) {
+            console.warn('i variable exceeded 250 mark. Random function is not optimized!');
+            return;
+         }
+         row = getRandomNum(0, 9);
+         col = getRandomNum(0, 9);
+         square = this.player1.boardUI.boardEl.querySelector(`.square[data-x="${row}"][data-y="${col}"]`);
+      } while (square.classList.contains('square--miss') || square.classList.contains('square--hit'));
+
+      this.player1.board.receiveAttack(square, this.player1.boardUI.boardEl);
    }
 }
-
-export default Game;

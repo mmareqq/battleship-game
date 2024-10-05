@@ -1,11 +1,20 @@
 <main class="main">
-   <h1 class="text-center text-4xl font-bold mb-20 tracking-wide">Battle Ship Game</h1>
-   <div class="flex gap-5 flex-row flex-wrap">
-      <button class="play-btn play-btn-player bg-green-500">
-         <img src="../assets/vs.png"><span>Player</span>
-      </button>
-      <button class="play-btn play-btn-computer bg-cyan-400">
-         <img src="../assets/vs.png"><span>Computer</span>
-      </button>
+   <div class="players">
+      <div class="player">
+         <button class="change-name"><img src="../assets/edit-icon.svg" /></button>
+         <span>Player 2:</span>
+         <span class="player-name"></span>
+      </div>
+      <div class="player">
+         <button class="change-name"><img src="../assets/edit-icon.svg" /></button><span>Player 1:</span>
+         <span class="player-name"></span>
+      </div>
+   </div>
+   <div class="container">
+      <h1 class="text-center text-4xl font-bold mb-20 tracking-wide">Battle Ship Game</h1>
+      <div class="flex gap-5 flex-row flex-wrap">
+         <button class="play-btn play-btn--pvp bg-green-500"><img src="../assets/vs.png" /><span>Player</span></button>
+         <button class="play-btn play-btn-pvc bg-cyan-400"><img src="../assets/vs.png" /><span>Computer</span></button>
+      </div>
    </div>
 </main>

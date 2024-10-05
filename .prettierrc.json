@@ -3,5 +3,5 @@
    "tabWidth": 3,
    "bracketSameLine": true,
    "arrowParens": "avoid",
-   "printWidth": 120
+   "printWidth": 100
 }

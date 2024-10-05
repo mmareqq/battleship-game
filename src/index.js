@@ -1,11 +1,9 @@
 import getTemplate from '../src/modules/getTemplate';
 import { Player, Computer } from '../src/modules/player';
-import Game from '../src/modules/gamePlay';
 import './styles/input.css';
 import PlaceShipManager from '../src/modules/placeShip';
-import { getRandomBoard, generateNewBoard } from './modules/computerBoards';
-
-const board = await getTemplate('./templates/board.html');
+import { PvPGame, PvCGame } from './modules/game';
+import GamePlay from './modules/gamePlay'
 
 async function fetchStartingPage() {
    try {
@@ -17,87 +15,41 @@ async function fetchStartingPage() {
    }
 }
 
-async function init() {
-   try {
-      await fetchStartingPage();
-   } catch (err) {
-      throw new Error(err);
-   }
-   const btn = document.querySelector('.play-button');
-   btn.addEventListener('click', initalizePlacements);
-   initalizePlacements(); // del
-}
-
-async function initalizePlacements() {
-   try {
-      const template = await getTemplate('./templates/boardCreator.html');
-      document.body.innerHTML = template;
-   } catch (err) {
-      throw new Error(err);
+class App {
+   constructor(player1, player2) {
+      this.player1 = player1;
+      this.player2 = player2;
+      this.placeShipManager = new PlaceShipManager();
+      this.init();
    }
 
-   const boardEl = document.querySelector('.board');
-   boardEl.innerHTML = board;
+   async init() {
+      try {
+         await fetchStartingPage();
 
-   let shipPlacementManager = new PlaceShipManager();
-
-   const resetBtn = document.querySelector('.reset-btn');
-   resetBtn.addEventListener('click', () => {
-      initalizePlacements();
-   });
-
-   const continueBtn = document.querySelector('.continue-btn');
-   continueBtn.addEventListener('click', () => {
-      // getDataToFile(shipPlacementManager.board.ships)
-
-      startGame(shipPlacementManager.board.ships, getRandomBoard());
-   });
-}
-
-async function startGame(ships1, ships2) {
-   try {
-      await fetchGamePage('Player 1', 'Computer');
-   } catch (err) {
-      throw new Error(err);
+         this.pvcBtn = document.querySelector('.play-btn-pvc');
+         this.pvpBtn = document.querySelector('.play-btn--pvp');
+         this.#addListeners();
+      } catch (err) {
+         throw new Error(err);
+      }
    }
 
-   const player1 = new Player(ships1, 'Player 1');
-   const player2 = new Computer(ships2);
-   const game = new Game(player1, player2);
-}
+   #addListeners() {
+      this.pvcBtn.addEventListener('click', () => {
+         this.game = new PvCGame(this.player1, new Computer(), this);
+         this.game.init();
+      });
 
-async function fetchGamePage(name1, name2) {
-   const gamePageURL = '../templates/gamePage.html';
-   try {
-      const gamePage = await getTemplate(gamePageURL);
-      document.body.innerHTML = gamePage;
-   } catch (err) {
-      throw new Error(err);
+      this.pvpBtn.addEventListener('click', () => {
+         this.game = new PvPGame(this.player1, this.player2, this);
+         this.game.init();
+      });
    }
 
-   document.querySelector('.player-name1').innerHTML = name1;
-   document.querySelector('.player-name2').innerHTML = name2;
-   const board1 = document.querySelector('.board1');
-   const board2 = document.querySelector('.board2');
-   board1.innerHTML = board;
-   board2.innerHTML = board;
+   initalizeGamePlay() {
+      new GamePlay(this.player1, this.player2)
+   }
 }
 
-function getDataToFile(data) {
-   data.forEach(ship => {
-      delete ship.hits; // Deleting unnecessary properties
-   });
-   data = JSON.stringify(data)
-   const blob = new Blob([data], { type: 'text/plain' }); // Create a Blob object
-   const url = URL.createObjectURL(blob); // Create a URL for the Blob
-
-   const a = document.createElement('a'); // Create an anchor element
-   a.href = url; // Set the href to the Blob URL
-   a.download = 'output.txt'; // Set the desired file name
-   document.body.appendChild(a); // Append the anchor to the body
-   a.click(); // Programmatically click the anchor to trigger the download
-   document.body.removeChild(a); // Remove the anchor from the document
-   URL.revokeObjectURL(url); // Clean up the Blob URL
-}
-
-init();
+const app = new App(new Player([], 'Player 1'), new Player([], 'Player 2'));

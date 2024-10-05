@@ -5,18 +5,18 @@ export default class PlaceShipManager {
    constructor() {
       this.ship = { length: 5, isVertical: true };
       this.shipLengths = [null, null, 3, 2, 1, 1];
-      // Value represents quantity of the ship, index represents length of the ship
-      this.shipDirBtns = document.querySelectorAll('.ship-direction');
-      this.shipsEl = Array.from(document.querySelectorAll('.ship-btn')); // Remove change to arry
-      this.boardUI = null;
-      this.board = new Board();
-      this.init();
+      this.board = new Board()
+      // Value represents quantity of ships, index represents length of the ship
    }
 
    init() {
+      this.shipDirBtns = document.querySelectorAll('.ship-direction');
+      this.shipsEl = Array.from(document.querySelectorAll('.ship-btn'));
+      
       const boardEl = document.querySelector('.game-board');
       if (!boardEl) throw new Error("Couldn't find game-board el");
       this.boardUI = new BoardUI(boardEl);
+
 
       this.#addListener();
       this.#removeSquareListener();
