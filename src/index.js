@@ -3,7 +3,7 @@ import { Player, Computer } from '../src/modules/player';
 import './styles/input.css';
 import PlaceShipManager from '../src/modules/placeShip';
 import { PvPGame, PvCGame } from './modules/game';
-import GamePlay from './modules/gamePlay'
+import GamePlay from './modules/gamePlay';
 
 async function fetchStartingPage() {
    try {
@@ -26,6 +26,8 @@ class App {
    async init() {
       try {
          await fetchStartingPage();
+         this.player1.init();
+         this.player2.init();
 
          this.pvcBtn = document.querySelector('.play-btn-pvc');
          this.pvpBtn = document.querySelector('.play-btn--pvp');
@@ -33,6 +35,13 @@ class App {
       } catch (err) {
          throw new Error(err);
       }
+   }
+
+   updatePlayerScore(player, newScore) {
+      if (newScore) player.score = newScore;
+      else player.score += 1;
+      const scoreEl = document.querySelector('#player1 > .player-score');
+      scoreEl.textContent = player.score;
    }
 
    #addListeners() {
@@ -48,8 +57,10 @@ class App {
    }
 
    initalizeGamePlay() {
-      new GamePlay(this.player1, this.player2)
+      new GamePlay(this.player1, this.player2);
    }
 }
 
-const app = new App(new Player([], 'Player 1'), new Player([], 'Player 2'));
+
+
+new App(new Player([], 'Player 1', 'player1'), new Player([], 'Player 2', 'player2'));

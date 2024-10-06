@@ -1,14 +1,22 @@
 <main class="main">
    <div class="players">
-      <div class="player">
-         <button class="change-name"><img src="../assets/edit-icon.svg" /></button>
-         <span>Player 2:</span>
-         <span class="player-name"></span>
+      <div class="player" id="player1">
+         <span class="player-name">Player 1:</span>
+         <span class="player-score"></span>
+         <button class="edit-name"><img src="../assets/edit-icon.svg" /></button>
       </div>
-      <div class="player">
-         <button class="change-name"><img src="../assets/edit-icon.svg" /></button><span>Player 1:</span>
+      <div class="player" id="player2">
          <span class="player-name"></span>
+         <span class="player-score"></span>
+         <button class="edit-name"><img src="../assets/edit-icon.svg" /></button>
       </div>
+      <div class="player" id="player3">
+         <span>Computer:</span><span class="player-name"></span>
+         <span class="player-score"></span>
+      </div>
+      <button class="score-reset border  border-solid border-black my-2">
+         Reset scores
+      </button>
    </div>
    <div class="container">
       <h1 class="text-center text-4xl font-bold mb-20 tracking-wide">Battle Ship Game</h1>
@@ -17,4 +25,14 @@
          <button class="play-btn play-btn-pvc bg-cyan-400"><img src="../assets/vs.png" /><span>Computer</span></button>
       </div>
    </div>
+   <dialog id="dialog" class="p-36">
+      <form class="text-lg">
+         <label class="text-center block">Change your name:</label>  
+         <input id="dialog-input" type="text" value="">
+         <menu class="my-3 ml-auto flex">
+            <button class="btn close-btn bg-red-700 ml-auto">✖</button>
+            <button class="btn confirm-btn bg-green-700">✔</button>
+         </menu>
+      </form>
+   </dialog>
 </main>

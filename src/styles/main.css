@@ -308,7 +308,7 @@ a {
 
 
 .square--miss {
-  /* background-color: rgb(209, 209, 209); */
+  background-color: rgb(209, 209, 209);
   position: relative;
   pointer-events: none;
 }
@@ -340,33 +340,46 @@ a {
 }
 
 .players {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
   position: absolute;
-  top: 0;
-  left: 0;
+  display: grid;
+  gap: 1rem;
+  top: 1rem;
+  left: 1rem;
+  padding: 1rem;
   width: 200px;
-  height: auto;
-  background-color: aqua;
+  border: 3px dotted black;
 }
 
 .player img {
   width: 3ch;
-  margin-right: .5rem;
 }
 
 .player {
   display: flex;
+  justify-content: space-between;
   gap: .25rem;
 }
 
 .player-name {
 }
 
-@media (max-width: 48rem) {
+input {
+  border: 2px solid black;
+  border-radius: 5px;
+}
+
+input:focus {
+  outline-color: rgba(88, 30, 182, 0.932);
+}
+
+.btn {
+  color: white;
+  width: 60px;
+  border-radius: .25rem;
+}
+
+/* @media (max-width: 48rem) {
   .players {
     display: flex;
-    background-color: red;
   }
-}
+} */
