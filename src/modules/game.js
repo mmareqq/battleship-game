@@ -1,6 +1,7 @@
-import getTemplate from "./getTemplate";
-import { getRandomBoard } from "./computerBoards";
-import getDataToFile from './dataToFile'
+import getTemplate from './getTemplate';
+import { getRandomBoard } from './computerBoards';
+import getDataToFile from './dataToFile';
+import PlaceShipManager from './placeShip';
 
 class Game {
    constructor(player1, player2, app) {
@@ -10,7 +11,7 @@ class Game {
    }
 
    async init() {
-      this.boardTemplate = await getTemplate('./templates/board.html') // Helper method since board template will be used many times.
+      this.boardTemplate = await getTemplate('./templates/board.html'); // Helper method since board template will be used many times.
       this.initalizePlacements();
    }
 
@@ -37,27 +38,26 @@ class Game {
       });
    }
 
-
    addContinueBtnListener() {
       const continueBtn = document.querySelector('.continue-btn');
       continueBtn.addEventListener('click', () => {
          // getDataToFile(shipPlacementManager.board.ships)
          // For making new computer boards
-
-         this.startGame(this.app.placeShipManager.board.ships, getRandomBoard());
+         this.player1.board.ships = this.app.placeShipManager.board.ships
+         this.player2.board.ships = getRandomBoard()
+         this.startGame();
       });
    }
 
    async startGame() {
       try {
-         await this.#fetchGamePage('Player 1', 'Computer');
+         await this.#fetchGamePage(this.player1.name, this.player2.name);
       } catch (err) {
          throw new Error(err);
       }
 
-      this.app.initalizeGamePlay();
+      this.app.initalizeGamePlay(this.player1, this.player2);
    }
-
 
    async #fetchGamePage(name1, name2) {
       try {
@@ -66,7 +66,7 @@ class Game {
       } catch (err) {
          throw new Error(err);
       }
-   
+
       document.querySelector('.player-name1').innerHTML = name1;
       document.querySelector('.player-name2').innerHTML = name2;
 
@@ -75,22 +75,35 @@ class Game {
       board1.innerHTML = this.boardTemplate;
       board2.innerHTML = this.boardTemplate;
    }
-   
-   
 }
 
 export class PvPGame extends Game {
    constructor(player1, player2, app) {
       super(player1, player2, app);
+      this.gameMode = 'pvp';
+      this.boardPlacementStatus = '1';
    }
 
    addContinueBtnListener() {
-      return true;
+      const continueBtn = document.querySelector('.continue-btn');
+      continueBtn.addEventListener('click', () => {
+         if (this.boardPlacementStatus === '1') {
+            this.player1.board.ships = this.app.placeShipManager.board.ships
+            this.app.placeShipManager = new PlaceShipManager() // Reset placeShipManager
+            this.boardPlacementStatus = '2';
+            this.initalizePlacements() // Reset board
+            return;
+         }
+         
+         this.player2.board.ships = this.app.placeShipManager.board.ships
+         this.app.initalizeGamePlay();
+      });
    }
 }
 
 export class PvCGame extends Game {
    constructor(player1, player2, app) {
       super(player1, player2, app);
+      this.gameMode = 'pvc';
    }
 }

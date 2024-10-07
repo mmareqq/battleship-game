@@ -56,8 +56,8 @@ class App {
       });
    }
 
-   initalizeGamePlay() {
-      new GamePlay(this.player1, this.player2);
+   initalizeGamePlay(player1, player2) {
+      new GamePlay(player1, player2);
    }
 }
 

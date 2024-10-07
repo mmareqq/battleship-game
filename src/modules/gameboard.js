@@ -62,11 +62,12 @@ export class BoardUI {
 export class Board {
    constructor(ships = []) {
       this.ships = ships;
-      this.mappedBoard = this.mapBoardArray();
+      this.mappedBoard = null;
    }
 
    receiveAttack(square, boardEl) {
       if (!square === undefined) throw new Error('Square was not found in mapped board');
+      if (!this.mappedBoard) this.mapBoardArray();
 
       const row = parseInt(square.dataset.x);
       const col = parseInt(square.dataset.y);
@@ -79,7 +80,7 @@ export class Board {
 
          if (ship.isSunk()) {
             ship.markDead(boardEl);
-            
+
             if (this.isAllSunk()) {
                alert('GAME OVER');
                // FURTHER ENDING OF THE GAME
@@ -103,10 +104,15 @@ export class Board {
 
       this.ships.forEach((ship, index) => {
          ship.squares.forEach(square => {
-            board[square[0]][square[1]] = { id: index, status: 'o' };
+            const row = square[0];
+            const col = square[1];
+
+            console.log(row,' | ', col)
+            board[row][col] = { id: index, status: 'o' };
          });
       });
-      return board;
+      
+      this.mappedBoard = board;
    }
 
    isAllSunk() {

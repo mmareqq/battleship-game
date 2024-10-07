@@ -9,7 +9,7 @@ export default class PlaceShipManager {
       // Value represents quantity of ships, index represents length of the ship
    }
 
-   init() {
+   async init() {
       this.shipDirBtns = document.querySelectorAll('.ship-direction');
       this.shipsEl = Array.from(document.querySelectorAll('.ship-btn'));
       

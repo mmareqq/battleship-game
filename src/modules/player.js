@@ -11,7 +11,6 @@ class Competitor {
    }
 
    init() {
-      console.log('init Competitor')
       new PlayerManager(this)
    }
 
