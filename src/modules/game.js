@@ -2,6 +2,7 @@ import getTemplate from './getTemplate';
 import { getRandomBoard } from './computerBoards';
 import getDataToFile from './dataToFile';
 import PlaceShipManager from './placeShip';
+import GamePlay from './gamePlay';
 
 class Game {
    constructor(player1, player2, app) {
@@ -45,35 +46,8 @@ class Game {
          // For making new computer boards
          this.player1.board.ships = this.app.placeShipManager.board.ships
          this.player2.board.ships = getRandomBoard()
-         this.startGame();
+         new GamePlay(this.player1, this.player2)
       });
-   }
-
-   async startGame() {
-      try {
-         await this.#fetchGamePage(this.player1.name, this.player2.name);
-      } catch (err) {
-         throw new Error(err);
-      }
-
-      this.app.initalizeGamePlay(this.player1, this.player2);
-   }
-
-   async #fetchGamePage(name1, name2) {
-      try {
-         const gamePage = await getTemplate('../templates/gamePage.html');
-         document.body.innerHTML = gamePage;
-      } catch (err) {
-         throw new Error(err);
-      }
-
-      document.querySelector('.player-name1').innerHTML = name1;
-      document.querySelector('.player-name2').innerHTML = name2;
-
-      const board1 = document.querySelector('.board1');
-      const board2 = document.querySelector('.board2');
-      board1.innerHTML = this.boardTemplate;
-      board2.innerHTML = this.boardTemplate;
    }
 }
 
@@ -96,7 +70,8 @@ export class PvPGame extends Game {
          }
          
          this.player2.board.ships = this.app.placeShipManager.board.ships
-         this.app.initalizeGamePlay();
+
+         new GamePlay(this.player1, this.player2)
       });
    }
 }

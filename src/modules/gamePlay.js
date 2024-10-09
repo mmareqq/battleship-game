@@ -1,4 +1,5 @@
 import getRandomNum from './getRandom';
+import getTemplate from './getTemplate';
 
 export default class GamePlay {
    constructor(player1, player2) {
@@ -8,9 +9,33 @@ export default class GamePlay {
    }
 
    async init() {
+      await this.#fetchGamePage()
       this.player1.boardUI.boardEl = document.querySelector('.board1');
       this.player2.boardUI.boardEl = document.querySelector('.board2');
+      const name1El = document.querySelector('.player-name1')
+      const name2El = document.querySelector('.player-name2')
+      name1El.textContent = this.player1.name +  ':'
+      name2El.textContent = this.player2.name +  ':'
+      
       this.#addListeners();
+   }
+
+   async #fetchGamePage() {
+      try {
+         const gamePage = await getTemplate('../templates/gamePage.html');
+         this.boardTemplate = await getTemplate('../templates/board.html')
+         document.body.innerHTML = gamePage;
+      } catch (err) {
+         throw new Error(err);
+      }
+
+      document.querySelector('.player-name1').textContent = this.player1.name + ':';
+      document.querySelector('.player-name2').textContent = this.player2.name + ':';
+
+      const board1 = document.querySelector('.board1');
+      const board2 = document.querySelector('.board2');
+      board1.innerHTML = this.boardTemplate;
+      board2.innerHTML = this.boardTemplate;
    }
 
    #addListeners() {

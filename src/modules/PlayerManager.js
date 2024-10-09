@@ -1,72 +1,112 @@
 export default class PlayerManager {
    constructor(player) {
-      this.player = player
-      this.init()
+      this.player = player;
+      this.color = '#000';
+      this.init();
    }
 
    init() {
-      console.log('init Player manager', this.player.id)
-      this.nameEl = document.querySelector(`#${this.player.id} > .player-name`);
-      if(!this.nameEl) throw new Error('Missing name element')
-      this.nameEl.textContent = this.player.name + ': ';
+      this.playerEl = document.querySelector(`#${this.player.id}`);
+      
+      this.nameEl = this.playerEl.querySelector('.player-name');
+      this.updateName(this.player.name);
 
-      this.scoreEl = document.querySelector(`#${this.player.id} > .player-score`);
-      if(!this.scoreEl) throw new Error('Missing score element')
-      this.scoreEl.textContent = this.player.score;
+      this.scoreEl = this.playerEl.querySelector('.player-score');
+      this.updateScore();
+
+      this.editBtn = this.playerEl.querySelector('.edit-name');
+      this.trashBtn = this.playerEl.querySelector('.delete-user');
 
       this.dialogEl = document.querySelector('#dialog');
-      this.editBtn = document.querySelector(`#${this.player.id} > .edit-name`);
+
       this.#addListeners();
    }
 
    #addListeners() {
       this.editBtn.addEventListener('click', () => {
-         this.openDialog()
-      })
-      
+         this.openDialog();
+      });
+
+      this.trashBtn.addEventListener('click', () => {
+         switch (this.player.id) {
+            case 'player1':
+               this.updateName('Player 1');
+               this.scoreEl = '0';
+               this.updateColor('#000000')
+               break;
+            case 'player2':
+               this.updateName('Player 2');
+               this.scoreEl = '0';
+               this.updateColor('#000000')
+               break;
+            case 'player3':
+               this.updateName('Computer');
+               this.scoreEl = '0';
+               this.updateColor('#000000')
+               break;
+         }
+      });
    }
 
    openDialog() {
-      console.log('adf');
       this.dialogEl.showModal();
+      this.nameInput = this.dialogEl.querySelector('#name-input');
+      
+      this.colorInput = this.dialogEl.querySelector('#color-input');
+      const optionEls = [...this.colorInput.children]
+      optionEls.forEach(optionEl => {
+         optionEl.style.color = optionEl.value
+      });
 
-      this.closeBtn = this.dialogEl.querySelector('.close-btn')
-      this.confirmBtn = this.dialogEl.querySelector('.confirm-btn')
+      this.closeBtn = this.dialogEl.querySelector('.close-btn');
+      this.confirmBtn = this.dialogEl.querySelector('.confirm-btn');
 
-      this.closeBtn.addEventListener('click', this.handleCancel)
-
-      this.confirmBtn.addEventListener('click', this.handleConfirm)
+      this.closeBtn.addEventListener('click', this.handleCancel);
+      this.confirmBtn.addEventListener('click', this.handleConfirm);
    }
 
    handleCancel = e => {
-      e.preventDefault()
-      this.dialogEl.close()
-      this.removeListeners()
-   }
+      e.preventDefault();
+      this.dialogEl.close();
+      this.removeListeners();
+   };
 
    handleConfirm = e => {
-      e.preventDefault()
-      this.dialogEl.close()
-      this.removeListeners()
-      const input = this.dialogEl.querySelector('#dialog-input')
-      this.changeName(input.value)
+      e.preventDefault();
+      this.dialogEl.close();
+      this.removeListeners();
 
-   }
+      this.updateColor(this.colorInput.value);
+      this.updateName(this.nameInput.value);
+   };
 
    removeListeners() {
-      this.closeBtn.removeEventListener('click', this.handleCancel)
-      this.confirmBtn.removeEventListener('click', this.handleConfirm)
+      this.closeBtn.removeEventListener('click', this.handleCancel);
+      this.confirmBtn.removeEventListener('click', this.handleConfirm);
    }
 
-   changeName(name) {
-      console.log('changing name', this.player.id)
-      if(!name || name === -1) return;
-      if(name.length > 14) {
-         alert('Name is too long. Enter no more than 14 characters')
+   updateScore(newScore) {
+      if (!newScore) newScore = 0;
+      this.scoreEl.textContent = newScore;
+      this.player.score = newScore;
+   }
+
+   updateColor(newColor) {
+      if(!newColor) return;
+      this.color = newColor;
+      this.scoreEl.style.color = newColor
+      this.nameEl.style.color = newColor
+      this.playerEl.querySelector('svg').style.fill = newColor
+   }
+
+   updateName(newName) {
+      if (!newName || newName === -1) return;
+      if (newName.length > 14) {
+         alert('Name is too long. Enter no more than 14 characters');
          return;
       }
 
-      
-      this.nameEl.textContent = name + ': '
+      this.player.name = newName;
+      this.nameEl.textContent = newName + ': ';
    }
 }

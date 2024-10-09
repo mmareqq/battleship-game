@@ -19,6 +19,7 @@ class App {
    constructor(player1, player2) {
       this.player1 = player1;
       this.player2 = player2;
+      this.computer = new Computer()
       this.placeShipManager = new PlaceShipManager();
       this.init();
    }
@@ -28,6 +29,7 @@ class App {
          await fetchStartingPage();
          this.player1.init();
          this.player2.init();
+         this.computer.init()
 
          this.pvcBtn = document.querySelector('.play-btn-pvc');
          this.pvpBtn = document.querySelector('.play-btn--pvp');
@@ -56,9 +58,6 @@ class App {
       });
    }
 
-   initalizeGamePlay(player1, player2) {
-      new GamePlay(player1, player2);
-   }
 }
 
 

@@ -107,7 +107,6 @@ export class Board {
             const row = square[0];
             const col = square[1];
 
-            console.log(row,' | ', col)
             board[row][col] = { id: index, status: 'o' };
          });
       });

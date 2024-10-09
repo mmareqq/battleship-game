@@ -60,3 +60,7 @@ button {
    border: 0;
    border-radius: .35em;
 }
+
+path {
+   fill: inherit;
+}

@@ -15,7 +15,7 @@ module.exports = {
   resolve: {
     modules: ['node_modules'],
   },
-  devtool: "source-map",
+  devtool: "eval",
   devServer: {
     watchFiles: ['src/**/*'],
     static: {

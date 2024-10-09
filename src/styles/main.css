@@ -346,21 +346,33 @@ a {
   top: 1rem;
   left: 1rem;
   padding: 1rem;
-  width: 200px;
   border: 3px dotted black;
 }
 
-.player img {
+.player svg {
   width: 3ch;
+  aspect-ratio: 1;
+}
+
+.player-name {
+  min-width: 10ch;
+}
+
+.player-score {
+  font-size: 1.125rem;
+  font-weight: bold;
+}
+
+.player > div {
+  display: flex;
+  gap: .5rem;
+  align-items: center;
 }
 
 .player {
   display: flex;
   justify-content: space-between;
   gap: .25rem;
-}
-
-.player-name {
 }
 
 input {
@@ -376,6 +388,10 @@ input:focus {
   color: white;
   width: 60px;
   border-radius: .25rem;
+}
+
+#color-input option {
+  text-shadow: red 2px 5px;
 }
 
 /* @media (max-width: 48rem) {
