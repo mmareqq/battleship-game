@@ -356,6 +356,7 @@ a {
 
 .player-name {
   min-width: 10ch;
+  background-color: white;
 }
 
 .player-score {
@@ -372,7 +373,7 @@ a {
 .player {
   display: flex;
   justify-content: space-between;
-  gap: .25rem;
+  gap: 2rem;
 }
 
 input {
@@ -393,9 +394,3 @@ input:focus {
 #color-input option {
   text-shadow: red 2px 5px;
 }
-
-/* @media (max-width: 48rem) {
-  .players {
-    display: flex;
-  }
-} */

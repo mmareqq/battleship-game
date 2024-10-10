@@ -1,7 +1,8 @@
 export default class PlayerManager {
    constructor(player) {
       this.player = player;
-      this.color = '#000';
+      this.color = '#000000';
+      this.colorIndex = 0;
       this.init();
    }
 
@@ -51,12 +52,10 @@ export default class PlayerManager {
    openDialog() {
       this.dialogEl.showModal();
       this.nameInput = this.dialogEl.querySelector('#name-input');
-      
+      this.nameInput.value = this.player.name;
+
       this.colorInput = this.dialogEl.querySelector('#color-input');
-      const optionEls = [...this.colorInput.children]
-      optionEls.forEach(optionEl => {
-         optionEl.style.color = optionEl.value
-      });
+      this.colorInput.value = this.color
 
       this.closeBtn = this.dialogEl.querySelector('.close-btn');
       this.confirmBtn = this.dialogEl.querySelector('.confirm-btn');
