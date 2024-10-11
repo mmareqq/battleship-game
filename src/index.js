@@ -1,9 +1,8 @@
 import getTemplate from '../src/modules/getTemplate';
 import { Player, Computer } from '../src/modules/player';
 import './styles/input.css';
-import PlaceShipManager from '../src/modules/placeShip';
 import { PvPGame, PvCGame } from './modules/game';
-import GamePlay from './modules/gamePlay';
+import { getFromStorage } from './modules/localStorage';
 
 async function fetchStartingPage() {
    try {
@@ -16,27 +15,25 @@ async function fetchStartingPage() {
 }
 
 class App {
-   constructor(player1, player2) {
+   constructor(player1, player2, computer) {
       this.player1 = player1;
       this.player2 = player2;
-      this.computer = new Computer()
-      this.placeShipManager = new PlaceShipManager();
+      this.computer = computer;
       this.init();
    }
 
    async init() {
       try {
          await fetchStartingPage();
-         this.player1.init();
-         this.player2.init();
-         this.computer.init()
-
-         this.pvcBtn = document.querySelector('.play-btn-pvc');
-         this.pvpBtn = document.querySelector('.play-btn--pvp');
-         this.#addListeners();
       } catch (err) {
          throw new Error(err);
       }
+      this.player1.init();
+      this.player2.init();
+      this.computer.init();
+      this.pvcBtn = document.querySelector('.play-btn-pvc');
+      this.pvpBtn = document.querySelector('.play-btn--pvp');
+      this.#addListeners();
    }
 
    updatePlayerScore(player, newScore) {
@@ -48,18 +45,22 @@ class App {
 
    #addListeners() {
       this.pvcBtn.addEventListener('click', () => {
-         this.game = new PvCGame(this.player1, new Computer(), this);
+         this.game = new PvCGame(this.player1, this.computer);
          this.game.init();
       });
 
       this.pvpBtn.addEventListener('click', () => {
-         this.game = new PvPGame(this.player1, this.player2, this);
+         this.game = new PvPGame(this.player1, this.player2);
          this.game.init();
       });
    }
-
 }
 
+function init() {
+   const player1 = getFromStorage('player1') || new Player('Player 1', 'player1');
+   const player2 = getFromStorage('player2') || new Player('Player 2', 'player2');
+   const comp = getFromStorage('player3') || new Computer();
+   new App(player1, player2, comp);
+}
 
-
-new App(new Player([], 'Player 1', 'player1'), new Player([], 'Player 2', 'player2'));
+document.addEventListener('DOMContentLoaded', init);

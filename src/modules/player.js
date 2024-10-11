@@ -2,7 +2,7 @@ import { Board, BoardUI } from './gameboard';
 import PlayerManager from './PlayerManager';
 
 class Competitor {
-   constructor(ships, name, id, score = 0) {
+   constructor(name, id, score, ships) {
       this.board = new Board(ships);
       this.boardUI = new BoardUI();
       this._name = name;
@@ -25,14 +25,14 @@ class Competitor {
 }
 
 class Computer extends Competitor {
-   constructor(ships) {
-      super(ships, 'Computer', 'player3');
+   constructor(name = 'Computer', id = 'player3', score = 0, ships = []) {
+      super(name, id, score, ships);
    }
 }
 
 class Player extends Competitor {
-   constructor(ships, name, id) {
-      super(ships, name, id);
+   constructor(name, id, score = 0, ships = []) {
+      super(name, id, score, ships);
    }
 }
 
