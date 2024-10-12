@@ -49,9 +49,11 @@ export default class GamePlay {
 
    handleAttack(e) {
       this.player2.board.receiveAttack(e.target, this.player2.boardUI.boardEl);
-      setTimeout(() => {
-         this.handleComputerAttack();
-      }, 500);
+      if(this.player2.id === 'player3') {
+         setTimeout(() => {
+            this.handleComputerAttack();
+         }, 500);
+      }
    }
 
    handleComputerAttack() {

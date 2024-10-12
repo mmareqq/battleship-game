@@ -14,9 +14,6 @@ class Game {
 
    async init() {
       try {
-         this.transitionScreenTemplate = await getTemplate(
-            './templates/transitionScreen.html'
-         );
          this.boardTemplate = await getTemplate('./templates/board.html');
          this.boardCreatorTemplate = await getTemplate(
             './templates/boardCreator.html'
@@ -25,6 +22,15 @@ class Game {
          throw new Error(err);
       }
       this.initalizePlacements();
+      this.displayTransition();
+   }
+
+   displayTransition() {
+      document.documentElement.style.setProperty(
+         '--ship-placement-color',
+         this.player1.manager.color
+      );
+      return;
    }
 
    initalizePlacements(name) {
@@ -50,7 +56,7 @@ class Game {
 
    handleReset = () => {
       this.initalizePlacements(this.player1.name);
-   }
+   };
 
    addContinueBtnListener() {
       document
@@ -59,13 +65,11 @@ class Game {
    }
 
    handleContinue = () => {
-      debugger
       // getDataToFile(shipPlacementManager.board.ships)
-      // For making new computer boards
       this.player1.board.ships = this.placeShipManager.board.ships;
       this.player2.board.ships = getRandomBoard();
       new GamePlay(this.player1, this.player2);
-   }
+   };
 }
 
 export class PvPGame extends Game {
@@ -79,7 +83,7 @@ export class PvPGame extends Game {
       this.boardPlacementStatus === '1'
          ? this.initalizePlacements(this.player1.name)
          : this.initalizePlacements(this.player2.name);
-   }
+   };
 
    handleContinue = () => {
       if (this.boardPlacementStatus === '2') {
@@ -91,6 +95,34 @@ export class PvPGame extends Game {
       this.player1.board.ships = this.placeShipManager.board.ships;
       this.boardPlacementStatus = '2';
       this.initalizePlacements(this.player2.name); // Reset board
+      this.displayTransition();
+   };
+
+   displayTransition() {
+      this.transitionDialog = document.querySelector(
+         '#transition-screen-dialog'
+      );
+      const opponentEl = this.transitionDialog.querySelector('.opponent');
+      const playerEl = this.transitionDialog.querySelector('.player-name');
+      let playerFirst = this.player1;
+      let playerSecond = this.player2;
+      if (this.boardPlacementStatus === '2') {
+         playerFirst = this.player2;
+         playerSecond = this.player1;
+      }
+
+      playerEl.textContent = playerFirst.name;
+      playerEl.style.color = playerFirst.manager.color;
+      opponentEl.textContent = playerSecond.name;
+      opponentEl.style.color = playerSecond.manager.color;
+
+      this.transitionDialog.showModal();
+      this.transitionDialog
+         .querySelector('.transition-btn')
+         .addEventListener('click', e => {
+            e.preventDefault();
+            this.transitionDialog.close();
+         });
    }
 }
 

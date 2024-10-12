@@ -37,10 +37,9 @@ class App {
    }
 
    updatePlayerScore(player, newScore) {
-      if (newScore) player.score = newScore;
-      else player.score += 1;
-      const scoreEl = document.querySelector('#player1 > .player-score');
-      scoreEl.textContent = player.score;
+      if (!newScore) player.score += 1 
+      else player.score = newScore;
+      
    }
 
    #addListeners() {

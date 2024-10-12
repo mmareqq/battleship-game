@@ -11,7 +11,7 @@ class Competitor {
    }
 
    init() {
-      new PlayerManager(this)
+      this.manager = new PlayerManager(this)
    }
 
    get name() {
@@ -22,6 +22,13 @@ class Competitor {
       if (!newName) console.warn('Name not provided for setter');
       this._name = newName;
    }
+   
+
+   updateScore(newScore) {
+      if(!newScore) this.score += 1
+      else this.score = newScore
+      this.manager.updateScore(this.score)
+   } 
 }
 
 class Computer extends Competitor {

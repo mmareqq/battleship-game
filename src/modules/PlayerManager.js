@@ -7,7 +7,7 @@ export default class PlayerManager {
    }
 
    init() {
-      this.playerEl = document.querySelector(`#${this.player.id}`);
+      this.playerEl = document.querySelector(`.${this.player.id}`);
       
       this.nameEl = this.playerEl.querySelector('.player-name');
       this.updateName(this.player.name);
@@ -85,17 +85,18 @@ export default class PlayerManager {
    }
 
    updateScore(newScore) {
-      if (!newScore) newScore = 0;
-      this.scoreEl.textContent = newScore;
-      this.player.score = newScore;
+      this.scoreEl.textContent = newScore || this.player.score;
    }
 
    updateColor(newColor) {
       if(!newColor) return;
+      let customProperty = `--${this.player.id}-color`
+      document.documentElement.style.setProperty(customProperty, newColor)
+
       this.color = newColor;
-      this.scoreEl.style.color = newColor
-      this.nameEl.style.color = newColor
-      this.playerEl.querySelector('svg').style.fill = newColor
+      // this.scoreEl.style.color = newColor
+      // this.nameEl.style.color = newColor
+      // this.playerEl.querySelector('svg').style.fill = newColor
    }
 
    updateName(newName) {
