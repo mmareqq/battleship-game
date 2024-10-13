@@ -1,12 +1,29 @@
 <main class="main">
    <div class="flex gap-5">
       <div class="wrapper-board">
-         <p><span class="player-name1"></span></p>
+         <p><span class="player1-name"></span></p>
          <div class="board1"></div>
       </div>
       <div class="wrapper-board">
-         <p><span class="player-name2"></span></p>
+         <p><span class="player2-name"></span></p>
          <div class="board2"></div>
       </div>
    </div>
+
+   <dialog id="game-over-dialog">
+      <div>
+         <p><span class="winner"></span> wins!</p>
+         <button class="home-btn btn bg-green-700">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+               <path
+                  fill="currentColor"
+                  d="M262 101a8 8 0 0 0-11 0L66 277a8 8 0 0 0-2 6v165a32 32 0 0 0 32 32h96a16 16 0 0 0 16-16V328a8 8 0 0 1 8-8h80a8 8 0 0 1 8 8v136a16 16 0 0 0 16 16h96a32 32 0 0 0 32-32V283a8 8 0 0 0-2-6Z" />
+               <path
+                  fill="currentColor"
+                  d="m491 244-75-71V64a16 16 0 0 0-16-16h-48a16 16 0 0 0-16 16v32l-58-55c-5-6-13-9-22-9s-17 3-22 9L21 244c-6 6-7 16-1 22a16 16 0 0 0 23 2L251 69a8 8 0 0 1 11 0l207 199a16 16 0 0 0 23-1c6-6 5-17-1-23" />
+            </svg>
+            Home
+         </button>
+      </div>
+   </dialog>
 </main>

@@ -2,7 +2,7 @@ import getTemplate from './getTemplate';
 import { getRandomBoard } from './computerBoards';
 import getDataToFile from './dataToFile';
 import PlaceShipManager from './placeShip';
-import GamePlay from './gamePlay';
+import { GamePlayPVP, GamePlayPVC } from './gamePlay';
 
 class Game {
    constructor(player1, player2) {
@@ -21,17 +21,18 @@ class Game {
       } catch (err) {
          throw new Error(err);
       }
+      // Change color if player2 is computer
+      document.documentElement.style.setProperty(
+         '--player2-color',
+         this.player2.manager.color
+      );
+
+
       this.initalizePlacements();
       this.displayTransition();
    }
 
-   displayTransition() {
-      document.documentElement.style.setProperty(
-         '--ship-placement-color',
-         this.player1.manager.color
-      );
-      return;
-   }
+   displayTransition() {}
 
    initalizePlacements(name) {
       this.placeShipManager = new PlaceShipManager();
@@ -66,9 +67,6 @@ class Game {
 
    handleContinue = () => {
       // getDataToFile(shipPlacementManager.board.ships)
-      this.player1.board.ships = this.placeShipManager.board.ships;
-      this.player2.board.ships = getRandomBoard();
-      new GamePlay(this.player1, this.player2);
    };
 }
 
@@ -88,7 +86,7 @@ export class PvPGame extends Game {
    handleContinue = () => {
       if (this.boardPlacementStatus === '2') {
          this.player2.board.ships = this.placeShipManager.board.ships;
-         new GamePlay(this.player1, this.player2);
+         new GamePlayPVP(this.player1, this.player2);
          return;
       }
 
@@ -131,4 +129,23 @@ export class PvCGame extends Game {
       super(player1, player2);
       this.gameMode = 'pvc';
    }
+
+   displayTransition() {
+      document.documentElement.style.setProperty(
+         '--ship-placement-color',
+         this.player1.manager.color
+      );
+   }
+
+   handleContinue = () => {
+      // getDataToFile(shipPlacementManager.board.ships)
+      this.player1.board.ships = this.placeShipManager.board.ships;
+      this.player2.board.ships = getRandomBoard();
+      new GamePlayPVC(this.player1, this.player2);
+   };
+
+   handleReset = () => {
+      this.initalizePlacements(this.player1.name);
+   };
+
 }

@@ -19,7 +19,10 @@ export default class PlayerManager {
       this.trashBtn = this.playerEl.querySelector('.delete-user');
 
       this.dialogEl = document.querySelector('#dialog');
-
+      this.nameInput = this.dialogEl.querySelector('#name-input');
+      this.colorInput = this.dialogEl.querySelector('#color-input');
+      this.closeBtn = this.dialogEl.querySelector('.close-btn');
+      this.confirmBtn = this.dialogEl.querySelector('.confirm-btn');
       this.#addListeners();
    }
 
@@ -32,18 +35,18 @@ export default class PlayerManager {
          switch (this.player.id) {
             case 'player1':
                this.updateName('Player 1');
-               this.scoreEl = '0';
-               this.updateColor('#000000')
+               this.player.updateScore(0)
+               this.updateColor('#1e40af')
                break;
             case 'player2':
                this.updateName('Player 2');
-               this.scoreEl = '0';
-               this.updateColor('#000000')
+               this.player.updateScore(0)
+               this.updateColor('#166534')
                break;
             case 'player3':
                this.updateName('Computer');
-               this.scoreEl = '0';
-               this.updateColor('#000000')
+               this.player.updateScore(0);
+               this.updateColor('#c2410c')
                break;
          }
       });
@@ -51,15 +54,11 @@ export default class PlayerManager {
 
    openDialog() {
       this.dialogEl.showModal();
-      this.nameInput = this.dialogEl.querySelector('#name-input');
+
       this.nameInput.value = this.player.name;
-
-      this.colorInput = this.dialogEl.querySelector('#color-input');
+    
       this.colorInput.value = this.color
-
-      this.closeBtn = this.dialogEl.querySelector('.close-btn');
-      this.confirmBtn = this.dialogEl.querySelector('.confirm-btn');
-
+    
       this.closeBtn.addEventListener('click', this.handleCancel);
       this.confirmBtn.addEventListener('click', this.handleConfirm);
    }
@@ -90,13 +89,9 @@ export default class PlayerManager {
 
    updateColor(newColor) {
       if(!newColor) return;
+      this.color = newColor;
       let customProperty = `--${this.player.id}-color`
       document.documentElement.style.setProperty(customProperty, newColor)
-
-      this.color = newColor;
-      // this.scoreEl.style.color = newColor
-      // this.nameEl.style.color = newColor
-      // this.playerEl.querySelector('svg').style.fill = newColor
    }
 
    updateName(newName) {
@@ -105,8 +100,8 @@ export default class PlayerManager {
          alert('Name is too long. Enter no more than 14 characters');
          return;
       }
-
-      this.player.name = newName;
+   
+      this.player.setName(newName)
       this.nameEl.textContent = newName + ': ';
    }
 }
