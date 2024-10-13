@@ -6,21 +6,10 @@ export class BoardUI {
       this.init();
    }
 
-   set boardEl(newBoard) {
-      if (!newBoard) return;
-      this._boardEl = newBoard;
-      this.init();
-   }
-
-   get boardEl() {
-      return this._boardEl;
-   }
-
    init() {
       if (!this.boardEl) return;
       this.squares = this.boardEl.querySelectorAll('.square');
       this.#mapSquaresBoard();
-      this.#addListeners();
    }
 
    #mapSquaresBoard() {
@@ -43,30 +32,18 @@ export class BoardUI {
          square.classList.remove('square--blocked');
       });
    }
-
-   markAttack(x, y) {
-      // Mark squares to correct color
-   }
-
-   #addListeners() {
-      this.squares.forEach(square => {
-         square.addEventListener('click', () => {
-            const x = parseInt(square.dataset.x);
-            const y = parseInt(square.dataset.y);
-            this.markAttack(square);
-         });
-      });
-   }
 }
 
 export class Board {
    constructor(ships = []) {
       this.ships = ships;
-      this.mappedBoard = this.mapBoardArray();
+      this.mappedBoard = null;
    }
 
    receiveAttack(square, boardEl) {
-      if (!square === undefined) throw new Error('Square was not found in mapped board');
+      if (!square === undefined)
+         throw new Error('Square was not found in mapped board');
+      if (!this.mappedBoard) this.mapBoardArray();
 
       const row = parseInt(square.dataset.x);
       const col = parseInt(square.dataset.y);
@@ -78,16 +55,22 @@ export class Board {
          ship.hit();
 
          if (ship.isSunk()) {
-            ship.markDead(boardEl);
-            
-            if (this.isAllSunk()) {
-               alert('GAME OVER');
-               // FURTHER ENDING OF THE GAME
-            }
+            this.markDead(ship, boardEl);
+            if (this.isAllSunk()) return true;
          }
       } else {
          square.classList.add('square--miss');
       }
+   }
+
+   markDead(ship, boardEl) {
+      ship.squares.forEach(coord => {
+         const [row, col] = coord;
+         const square = boardEl.querySelector(
+            `.square[data-x="${row}"][data-y="${col}"]`
+         );
+         square.classList.add('square--dead');
+      });
    }
 
    mapBoardArray() {
@@ -103,10 +86,14 @@ export class Board {
 
       this.ships.forEach((ship, index) => {
          ship.squares.forEach(square => {
-            board[square[0]][square[1]] = { id: index, status: 'o' };
+            const row = square[0];
+            const col = square[1];
+
+            board[row][col] = { id: index, status: 'o' };
          });
       });
-      return board;
+
+      this.mappedBoard = board;
    }
 
    isAllSunk() {

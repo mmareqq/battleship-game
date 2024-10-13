@@ -1,7 +1,15 @@
 {
    "singleQuote": true,
-   "tabWidth": 3,
    "bracketSameLine": true,
    "arrowParens": "avoid",
-   "printWidth": 120
+   "printWidth": 80,
+   "tabWidth": 3,
+   "overrides": [
+      {
+        "files": "*.css",
+        "options": {
+          "tabWidth": 2
+        }
+      }
+    ]
 }
