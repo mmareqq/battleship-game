@@ -6,3 +6,6 @@ Battle of ships game
 - Test Driven Development
 - Tailwind
 - ES6 Modules
+
+
+Production mode not working
