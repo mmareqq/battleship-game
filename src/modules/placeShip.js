@@ -4,7 +4,7 @@ import Ship from './ship';
 export default class PlaceShipManager {
    constructor() {
       this.ship = { length: 5, isVertical: true };
-      this.shipLengths = [null, null, 0, 0, 0, 1];
+      this.shipLengths = [null, null, 3, 2, 1, 1];
       this.board = new Board()
       // Value represents quantity of ships, index represents length of the ship
    }
